@@ -1,0 +1,57 @@
+.main-container {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.main-container .container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* overflow-y: auto; */
+}
+
+.main-container .container .pages-container {
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.main-container .container .pages-container .pages {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: block; /* Ensure it doesn't flex children by default */
+}
+
+.loading-screen {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #ddd;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-screen p {
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  color: #333;
+}

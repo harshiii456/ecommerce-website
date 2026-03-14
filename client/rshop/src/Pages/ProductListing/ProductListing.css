@@ -1,0 +1,71 @@
+.product-listing-page {
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100% !important;
+  min-height: 100vh;
+  background-color: #f1f3f6;
+  padding: 10px;
+  gap: 15px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.filters-sidebar {
+  width: 280px !important;
+  flex-shrink: 0;
+  background: white;
+  padding: 20px;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  height: fit-content;
+}
+
+.results-content {
+  flex: 1;
+  background: white;
+  display: flex !important;
+  flex-direction: column !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  min-width: 0;
+}
+
+.results-header {
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.sorting-options {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+  align-items: center;
+}
+
+.sorting-options button {
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.sorting-options button.active {
+  color: #2874f0;
+  font-weight: 600;
+  border-bottom: 2px solid #2874f0;
+}
+
+.products-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  gap: 20px;
+  padding: 20px;
+}
+
+.loading, .error, .empty {
+  padding: 40px;
+  text-align: center;
+  font-size: 18px;
+}
