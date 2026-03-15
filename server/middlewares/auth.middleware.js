@@ -33,7 +33,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
 });
 
 export const isAdmin = asyncHandler(async (req, res, next) => {
-  if (req.user && req.user.user_role_id === 2) {
+  if (req.user && (req.user.role === 'admin' || req.user.user_role_id === 2)) {
     next();
   } else {
     throw new ErrorHandler(403, "Access denied. Admin resources only.");

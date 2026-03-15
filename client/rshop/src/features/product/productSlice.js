@@ -26,7 +26,7 @@ const productSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(fetchProducts.rejected, (state, action) => {
-      state.error = action.payload;
+      state.error = typeof action.payload === 'string' ? action.payload : (action.payload?.message || "Failed to fetch products");
       state.isLoading = false;
     });
 
@@ -39,7 +39,7 @@ const productSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(fetchProductById.rejected, (state, action) => {
-      state.error = action.payload;
+      state.error = typeof action.payload === 'string' ? action.payload : (action.payload?.message || "Failed to fetch product");
       state.isLoading = false;
     });
   },

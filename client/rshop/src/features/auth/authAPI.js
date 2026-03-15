@@ -5,6 +5,10 @@ const api = axios.create({
   baseURL: "/",
 });
 
+const getErrorMessage = (error) => {
+  return error.response?.data?.message || error.message || "An unexpected error occurred";
+};
+
 export const getCurrentUser = createAsyncThunk(
   "auth/getCurrentUser",
   async (_, thunkApi) => {
@@ -15,7 +19,7 @@ export const getCurrentUser = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      throw thunkApi.rejectWithValue(error.response.data.message);
+      return thunkApi.rejectWithValue(getErrorMessage(error));
     }
   }
 );
@@ -30,7 +34,7 @@ export const userStatus = createAsyncThunk(
       // thunkApi.fulfillWithValue(response.data)
       return response.data;
     } catch (error) {
-      return thunkApi.rejectWithValue(error.response.data.message);
+      return thunkApi.rejectWithValue(getErrorMessage(error));
     }
   }
 );
@@ -45,7 +49,7 @@ export const sendOTP = createAsyncThunk(
 
       return await response.data;
     } catch (error) {
-      throw thunkApi.rejectWithValue(error.response.data.message);
+      return thunkApi.rejectWithValue(getErrorMessage(error));
     }
   }
 );
@@ -60,7 +64,7 @@ export const LogIn = createAsyncThunk(
 
       return await response.data;
     } catch (error) {
-      throw thunkApi.rejectWithValue(error.response.data.message);
+      return thunkApi.rejectWithValue(getErrorMessage(error));
     }
   }
 );
@@ -75,7 +79,7 @@ export const createUser = createAsyncThunk(
 
       return await response.data;
     } catch (error) {
-      throw thunkApi.rejectWithValue(error.response.data.message);
+      return thunkApi.rejectWithValue(getErrorMessage(error));
     }
   }
 );
@@ -90,7 +94,7 @@ export const logOut = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      throw thunkApi.rejectWithValue(error.response.data.message);
+      return thunkApi.rejectWithValue(getErrorMessage(error));
     }
   }
 );

@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import "./style.css";
 
-import useToastNotification from "../../../hooks/useToastNotification";
+import toast from "react-hot-toast";
 import {Input} from "../../index";
 
 import { sendOTP, userStatus } from "../../../features/auth/authAPI";
@@ -22,7 +22,7 @@ const LogIn = ({ showSignup }) => {
   const dispatch = useDispatch();
   const { message, isLoading } = useSelector((state) => state.auth);
 
-  const { triggerNotification } = useToastNotification();
+
 
   const {
     register,
@@ -64,32 +64,20 @@ const LogIn = ({ showSignup }) => {
           return false;
         }
 
-        triggerNotification({
-          type: "success",
-          message: sendOtpResult.message,
-          duration: 3000,
-        });
+        toast.success(sendOtpResult.message);
 
         setProcced(true);
         setEmail(email);
       }
 
       if (userStatusResult.message === "NOT_FOUND") {
-        triggerNotification({
-          type: "info",
-          message: "You are not register with us,please sign up",
-          duration: 3000,
-        });
+        toast.error("You are not register with us,please sign up");
         setValue("email", "");
         showSignup();
         return false;
       }
     } catch (error) {
-      triggerNotification({
-        type: "error",
-        message: error,
-        duration: 3000,
-      });
+      toast.error(typeof error === 'string' ? error : (error?.message || "Login failed"));
     }
   };
   return (

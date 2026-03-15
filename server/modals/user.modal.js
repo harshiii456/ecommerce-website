@@ -5,7 +5,7 @@ import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { databaseInstance } from "../database/database.js";
 
 const newUser = async (userData) => {
-  const query = "INSERT INTO user_master (user_role_id, email_id, password, user_status) VALUES (1, ?, ?, 0)";
+  const query = "INSERT INTO user_master (user_role_id, email_id, password, user_status, role) VALUES (1, ?, ?, 0, 'customer')";
   try {
     const [res] = await databaseInstance.query(query, [userData.email_id, userData.password]);
     return res;
@@ -16,7 +16,7 @@ const newUser = async (userData) => {
 };
 
 const findUserByEmail = async (userData) => {
-  const query = "SELECT user_id,user_first_name,user_last_name,email_id,password,user_role_id,mobile_number,reset_password_token,reset_password_expire FROM user_master WHERE email_id=?";
+  const query = "SELECT user_id,user_first_name,user_last_name,email_id,password,user_role_id,mobile_number,reset_password_token,reset_password_expire,role FROM user_master WHERE email_id=?";
   try {
     const [res] = await databaseInstance.query(query, [userData]);
     return res;
@@ -27,7 +27,7 @@ const findUserByEmail = async (userData) => {
 };
 
 const findUser = async (userData) => {
-  const query = "SELECT user_id,user_first_name,user_last_name,email_id,mobile_number,user_role_id,refresh_token,reset_password_token,reset_password_expire FROM user_master WHERE user_id=?";
+  const query = "SELECT user_id,user_first_name,user_last_name,email_id,mobile_number,user_role_id,refresh_token,reset_password_token,reset_password_expire,role FROM user_master WHERE user_id=?";
   try {
     const [res] = await databaseInstance.query(query, [userData]);
     return res;
@@ -130,7 +130,7 @@ const updateResetToken = async (email_id, token, expires) => {
 };
 
 const getAllUsers = async () => {
-  const query = "SELECT user_id, user_first_name, user_last_name, email_id, mobile_number, user_role_id FROM user_master";
+  const query = "SELECT user_id, user_first_name, user_last_name, email_id, mobile_number, user_role_id, role FROM user_master";
   try {
     const [res] = await databaseInstance.query(query);
     return res;
@@ -151,18 +151,30 @@ const deleteUser = async (user_id) => {
   }
 };
 
+const updateUserRole = async (user_id, role) => {
+  const roleId = role === 'admin' ? 2 : 1;
+  const query = "UPDATE user_master SET role = ?, user_role_id = ? WHERE user_id = ?";
+  try {
+    const [res] = await databaseInstance.query(query, [role, roleId, user_id]);
+    return res;
+  } catch (error) {
+    console.error("DB Error in updateUserRole:", error);
+    throw new ErrorHandler(500, "Error updating user role");
+  }
+};
+
 const comparePassword = async function (enteredPassword, dbpassword) {
   return await bcrypt.compare(enteredPassword, dbpassword);
 };
 
-const generateAccessToken = function (user_id) {
-  return jwt.sign({ id: user_id }, process.env.ASSECC_TOKEN_SECRET, {
+const generateAccessToken = function (user_id, role) {
+  return jwt.sign({ id: user_id, role: role }, process.env.ASSECC_TOKEN_SECRET, {
     expiresIn: process.env.ASSECC_TOKEN_EXPIRE,
   });
 };
 
-const generateRefreshToken = function (user_id) {
-  return jwt.sign({ id: user_id }, process.env.REFRESH_TOKEN_SECRET, {
+const generateRefreshToken = function (user_id, role) {
+  return jwt.sign({ id: user_id, role: role }, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: process.env.REFRESH_TOKEN_EXPIRE,
   });
 };
@@ -182,6 +194,7 @@ export {
   updatePasswordByEmail,
   updateResetToken,
   getAllUsers,
-  deleteUser
+  deleteUser,
+  updateUserRole
 };
 

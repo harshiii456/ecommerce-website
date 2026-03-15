@@ -1,9 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../components/header/Header";
-import useToastNotification from "../hooks/useToastNotification";
 const RootLayout = () => {
-  const { notificationComponent } = useToastNotification();
   return (
     <>
       <div className="main-container">
@@ -17,7 +15,6 @@ const RootLayout = () => {
           </div>
         </div>
       </div>
-      {notificationComponent}
     </>
   );
 };

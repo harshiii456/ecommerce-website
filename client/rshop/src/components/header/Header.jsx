@@ -94,16 +94,21 @@ const Header = () => {
             >
               <li className="link-item">
                 <NavLink
-                  to={isAuthenticated ? "/" : "/auth"}
+                  to={
+                    !isAuthenticated 
+                      ? "/auth" 
+                      : (userData?.role === 'admin' || userData?.user_role_id === 2) 
+                        ? "/admin/dashboard" 
+                        : "/customer/dashboard"
+                  }
                   className="nav-link"
                   onMouseEnter={(event) => {
                     onMouseEnter(event.currentTarget);
                   }}
                 >
-                  {icons.Account}
                   {isAuthenticated
-                    ? userData?.data?.user?.user_first_name
-                      ? userData.data.user.user_first_name
+                    ? userData?.user_first_name
+                      ? userData.user_first_name
                       : "Account"
                     : "Login"}
                   <div className="icon-con">{icons.arrowdown}</div>
@@ -150,9 +155,15 @@ const Header = () => {
                 hovering={hovering}
                 popoverTop={popoverTop}
                 popoverLeft={popoverLeft}
-                data={DropDownMenuItem.filter((item) =>
-                  !isAuthenticated ? !item.authorized : item,
-                )}
+                data={DropDownMenuItem.filter((item) => {
+                  if (!isAuthenticated) {
+                    return !item.authorized;
+                  }
+                  if (item.authorized === "admin") {
+                    return userData?.role === 'admin' || userData?.user_role_id === 2;
+                  }
+                  return item.authorized !== false;
+                })}
                 onItemClick={handleItemClick}
               />
             </ul>

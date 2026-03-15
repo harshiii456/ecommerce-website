@@ -70,3 +70,11 @@
     background-color: var(--color-primary);
     cursor: pointer;
 }
+
+.login-type-selector {
+    margin-bottom: 2rem;
+}
+
+.login-type-selector button {
+    transition: all 0.3s ease;
+}

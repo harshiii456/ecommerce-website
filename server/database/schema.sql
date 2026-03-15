@@ -6,6 +6,7 @@ ALTER TABLE user_master ADD COLUMN IF NOT EXISTS refresh_token TEXT NULL;
 ALTER TABLE user_master ADD COLUMN IF NOT EXISTS reset_password_token VARCHAR(255) NULL;
 ALTER TABLE user_master ADD COLUMN IF NOT EXISTS reset_password_expire TIMESTAMP NULL;
 ALTER TABLE user_master ADD COLUMN IF NOT EXISTS user_status TINYINT(1) DEFAULT 0;
+ALTER TABLE user_master ADD COLUMN IF NOT EXISTS role ENUM('admin', 'customer') DEFAULT 'customer';
 
 -- 2. OTP Verification Table
 CREATE TABLE IF NOT EXISTS otp_verification (

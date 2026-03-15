@@ -27,7 +27,7 @@ export const DropDownMenuItem = [
   {
     title: "My Profile",
     img: icons.Account,
-    path: "/",
+    path: "/customer/dashboard",
     authorized: false,
   },
   {
@@ -41,6 +41,12 @@ export const DropDownMenuItem = [
     img: icons.oders,
     path: "/orders",
     authorized: false,
+  },
+  {
+    title: "Admin Dashboard",
+    img: icons.Account,
+    path: "/admin/dashboard",
+    authorized: "admin",
   },
   {
     title: "Notifications",

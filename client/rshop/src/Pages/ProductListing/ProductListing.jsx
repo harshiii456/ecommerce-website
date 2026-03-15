@@ -69,7 +69,7 @@ const ProductListing = ({}) => {
           {isLoading ? (
             <div className="loading">Loading products...</div>
           ) : error ? (
-            <div className="error">{error}</div>
+            <div className="error">{typeof error === 'string' ? error : (error?.message || "An error occurred")}</div>
           ) : (
             <div className="products-grid">
               {products.length > 0 ? (

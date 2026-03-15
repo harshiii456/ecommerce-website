@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 
 import {Input} from "../../index";
 
-import useToastNotification from "../../../hooks/useToastNotification";
+import toast from "react-hot-toast";
 
 import { sendOTP, userStatus } from "../../../features/auth/authAPI";
 import { clearErrorsMassage } from "../../../features/auth/authSlice";
@@ -19,7 +19,7 @@ const SignUp = ({ showSignup }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.auth);
-  const { triggerNotification } = useToastNotification();
+
   const {
     register,
     formState: { errors },
@@ -52,11 +52,7 @@ const SignUp = ({ showSignup }) => {
       dispatch(clearErrorsMassage());
       const userStatusResult = await dispatch(userStatus(userData)).unwrap();
       if (userStatusResult.message === "VERIFIED") {
-        triggerNotification({
-          type: "info",
-          message: "You are already register with us,please sign in",
-          duration: 3000,
-        });
+        toast.info("You are already register with us,please sign in");
         setValue("email", "");
         showSignup();
         return false;
@@ -70,20 +66,12 @@ const SignUp = ({ showSignup }) => {
           return false;
         }
 
-        triggerNotification({
-          type: "success",
-          message: sendOtpResult.message,
-          duration: 3000,
-        });
+        toast.success(sendOtpResult.message);
         setProcced(true);
         setEmail(email);
       }
     } catch (error) {
-      triggerNotification({
-        type: "error",
-        message: error,
-        duration: 3000,
-      });
+      toast.error(typeof error === 'string' ? error : (error?.message || "Signup failed"));
     }
   };
   return (

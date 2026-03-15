@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import useToastNotification from "../../../hooks/useToastNotification";
+import toast from "react-hot-toast";
 
 import "./OtpVerification.css";
 
@@ -20,7 +20,6 @@ const OtpVerification = () => {
   const dispatch = useDispatch();
   const { isLoading,isAuthenticated } = useSelector((state) => state.auth);
 
-  const { triggerNotification } = useToastNotification();
 
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -97,11 +96,7 @@ const OtpVerification = () => {
           return false;
         }
 
-        triggerNotification({
-          type: "success",
-          message: result.message,
-          duration: 3000,
-        });
+        toast.success(result.message);
 
         setProcced(true);
       }
@@ -113,20 +108,12 @@ const OtpVerification = () => {
           return false;
         }
 
-        triggerNotification({
-          type: "success",
-          message: result.message,
-          duration: 3000,
-        });
+        toast.success(result.message);
 
         setProcced(true);
       }
     } catch (error) {
-      triggerNotification({
-        type: "error",
-        message: error,
-        duration: 3000,
-      });
+      toast.error(typeof error === 'string' ? error : (error?.message || "Verification failed"));
     }
   };
 
@@ -142,19 +129,11 @@ const OtpVerification = () => {
         return false;
       }
 
-      triggerNotification({
-        type: "success",
-        message: sendOtpResult.message,
-        duration: 3000,
-      });
+      toast.success(sendOtpResult.message);
 
       setResendCount(30);
     } catch (error) {
-      triggerNotification({
-        type: "error",
-        message: error,
-        duration: 3000,
-      });
+      toast.error(typeof error === 'string' ? error : (error?.message || "Resend failed"));
     }
   };
 

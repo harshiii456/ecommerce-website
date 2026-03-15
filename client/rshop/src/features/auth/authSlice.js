@@ -29,14 +29,28 @@ const authSlice = createSlice({
       state.isCheckingAuth = true;
     });
     builder.addCase(getCurrentUser.fulfilled, (state, action) => {
-      state.userData = action.payload;
+      state.userData = action.payload?.data?.user || action.payload?.data || action.payload;
       state.isAuthenticated = true;
       state.isLoading = false;
       state.isCheckingAuth = false;
     });
     builder.addCase(getCurrentUser.rejected, (state, action) => {
       state.isAuthenticated = false;
-      state.error = action.payload;
+      state.userData = null;
+      // Only set error if it's not an authentication error
+      const payload = action.payload;
+      const errorMessage = typeof payload === 'string' ? payload : (payload?.message || action.error?.message || "");
+      
+      if (errorMessage && 
+          !errorMessage.toLowerCase().includes('unauthorized') &&
+          !errorMessage.toLowerCase().includes('401') &&
+          !errorMessage.toLowerCase().includes('jwt') &&
+          !errorMessage.toLowerCase().includes('token') &&
+          !errorMessage.toLowerCase().includes('expired')) {
+        state.error = errorMessage;
+      } else {
+        state.error = null;
+      }
       state.isLoading = false;
       state.isCheckingAuth = false;
     });
@@ -50,12 +64,12 @@ const authSlice = createSlice({
     });
 
     builder.addCase(userStatus.fulfilled, (state, action) => {
-      state.message = action.payload;
+      state.message = action.payload?.message || "Success";
       state.isLoading = false;
     });
 
     builder.addCase(userStatus.rejected, (state, action) => {
-      state.error = action.payload;
+      state.error = typeof action.payload === 'string' ? action.payload : (action.payload?.message || "User status check failed");
       state.isLoading = false;
     });
 
@@ -67,11 +81,11 @@ const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(sendOTP.fulfilled, (state, action) => {
-      state.message = action.payload;
+      state.message = action.payload?.message || "OTP Sent Successfully";
       state.isLoading = false;
     });
     builder.addCase(sendOTP.rejected, (state, action) => {
-      state.error = action.payload;
+      state.error = typeof action.payload === 'string' ? action.payload : (action.payload?.message || "Failed to send OTP");
       state.isLoading = false;
     });
 
@@ -83,13 +97,14 @@ const authSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(LogIn.fulfilled, (state, action) => {
-      state.userData = action.payload;
+      state.userData = action.payload?.data?.user || action.payload?.data || action.payload;
+      state.message = action.payload?.message || "Logged In Successfully";
       state.isAuthenticated = true;
       state.isLoading = false;
     });
     builder.addCase(LogIn.rejected, (state, action) => {
       state.isAuthenticated = false;
-      state.error = action.payload;
+      state.error = typeof action.payload === 'string' ? action.payload : (action.payload?.message || "Login failed");
       state.isLoading = false;
     });
     
@@ -101,13 +116,14 @@ const authSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(createUser.fulfilled, (state, action) => {
-      state.userData = action.payload;
+      state.userData = action.payload?.data?.user || action.payload?.data || action.payload;
+      state.message = action.payload?.message || "Account Created Successfully";
       state.isAuthenticated = true;
       state.isLoading = false;
     });
     builder.addCase(createUser.rejected, (state, action) => {
       state.isAuthenticated = false;
-      state.error = action.payload;
+      state.error = typeof action.payload === 'string' ? action.payload : (action.payload?.message || "Signup failed");
       state.isLoading = false;
     });
 

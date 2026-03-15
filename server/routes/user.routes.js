@@ -10,7 +10,8 @@ import {
   forgotPassword,
   resetPassword,
   adminGetAllUsers,
-  adminDeleteUser
+  adminDeleteUser,
+  adminUpdateUserRole
 } from "../controllers/user.controller.js";
 
 import { verifyJWT, isAdmin } from "../middlewares/auth.middleware.js";
@@ -33,5 +34,6 @@ router.route("/reset-password").post(resetPassword);
 // Admin Routes
 router.route("/admin/all-users").get(verifyJWT, isAdmin, adminGetAllUsers);
 router.route("/admin/user/:id").delete(verifyJWT, isAdmin, adminDeleteUser);
+router.route("/admin/user/:id/role").put(verifyJWT, isAdmin, adminUpdateUserRole);
 
 export default router;

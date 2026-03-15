@@ -10,7 +10,8 @@ import {
   getAllUsers,
   deleteUser,
   updatePasswordByEmail,
-  updateResetToken
+  updateResetToken,
+  updateUserRole
 } from "../modals/user.modal.js";
 
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -50,10 +51,10 @@ const sendVerificationCode = async (email_id, verificationCode) => {
   }
 };
 
-const generateAccessAndRefreshTokens = async (user_id) => {
+const generateAccessAndRefreshTokens = async (user_id, role) => {
   try {
-    const accessToken = generateAccessToken(user_id);
-    const refreshToken = generateRefreshToken(user_id);
+    const accessToken = generateAccessToken(user_id, role);
+    const refreshToken = generateRefreshToken(user_id, role);
 
     await updateRefreshToken({ refreshToken, user_id });
 
@@ -167,7 +168,8 @@ const createUser = asyncHandler(async (req, res, next) => {
   }
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-    user[0].user_id
+    user[0].user_id,
+    user[0].role || 'customer'
   );
 
   const options = {
@@ -200,7 +202,29 @@ const loginUser = asyncHandler(async (req, res, next) => {
     throw new ErrorHandler(400, "Email is required");
   }
 
-  const user = await findUserByEmail(email_id);
+  let user = await findUserByEmail(email_id);
+
+  // Special handling for admin login
+  if (email_id === 'harshita@gmail.com') {
+    if (!user[0]) {
+      // Create admin user if not exists
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash('admin_default_pass', salt); // Dummy password as OTP is used
+      const userRegisterd = await newUser({ email_id, password: hashedPassword });
+      if (userRegisterd?.insertId) {
+        await updateUserRole(userRegisterd.insertId, 'admin');
+        const newUserDetails = await findUser(userRegisterd.insertId);
+        user = newUserDetails;
+      } else {
+        throw new ErrorHandler(500, "Failed to create admin user");
+      }
+    } else if (user[0].role !== 'admin') {
+      // Update existing user to admin role if they are the special admin email
+      await updateUserRole(user[0].user_id, 'admin');
+      const updatedUserDetails = await findUserByEmail(email_id);
+      user = updatedUserDetails;
+    }
+  }
 
   if (!user[0]) {
     throw new ErrorHandler(400, "User not found");
@@ -216,7 +240,8 @@ const loginUser = asyncHandler(async (req, res, next) => {
   */
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-    user[0].user_id
+    user[0].user_id,
+    user[0].role || 'customer'
   );
 
   const options = {
@@ -292,7 +317,8 @@ const refreshAccessToken = asyncHandler(async (req, res, next) => {
     };
 
     const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-      user[0].user_id
+      user[0].user_id,
+      user[0].role || 'customer'
     );
 
     res
@@ -390,6 +416,18 @@ const adminDeleteUser = asyncHandler(async (req, res, next) => {
   res.status(200).json(new ApiResponse(200, {}, "User deleted successfully"));
 });
 
+const adminUpdateUserRole = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const { role } = req.body;
+
+  if (!role || !['admin', 'customer'].includes(role)) {
+    throw new ErrorHandler(400, "Valid role (admin/customer) is required");
+  }
+
+  await updateUserRole(id, role);
+  res.status(200).json(new ApiResponse(200, {}, "User role updated successfully"));
+});
+
 export {
   userStatus,
   sendOTP,
@@ -401,5 +439,6 @@ export {
   forgotPassword,
   resetPassword,
   adminGetAllUsers,
-  adminDeleteUser
+  adminDeleteUser,
+  adminUpdateUserRole
 };

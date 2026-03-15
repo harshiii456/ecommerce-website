@@ -29,6 +29,8 @@ const migrate = async () => {
                 refresh_token TEXT NULL,
                 reset_password_token VARCHAR(255) NULL,
                 reset_password_expire DATETIME NULL,
+                role VARCHAR(50) DEFAULT 'customer',
+                user_role_id INT DEFAULT 1,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
