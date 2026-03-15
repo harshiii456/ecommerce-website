@@ -9,12 +9,17 @@ import {
   adminUpdateUserRole,
   adminGetAllOrders,
   adminUpdateOrderStatus,
+  adminGetAllCategories,
+  adminCreateCategory,
+  adminUpdateCategory,
+  adminDeleteCategory,
 } from "./adminAPI";
 
 const initialState = {
   products: [],
   users: [],
   orders: [],
+  categories: [],
   isLoading: false,
   error: null,
   message: null,
@@ -53,6 +58,9 @@ const adminSlice = createSlice({
       .addCase(adminCreateProduct.fulfilled, (state, action) => {
         state.isLoading = false;
         state.message = action.payload.message;
+        // The API only returns the insertId, so we should trigger a re-fetch or 
+        // handle it in the component. For now, let's just set the message.
+        // Component will navigate back to list which triggers a fetch.
       })
       .addCase(adminCreateProduct.rejected, (state, action) => {
         state.isLoading = false;
@@ -67,6 +75,12 @@ const adminSlice = createSlice({
       .addCase(adminUpdateProduct.fulfilled, (state, action) => {
         state.isLoading = false;
         state.message = action.payload.message;
+        // Update the local state with the new data
+        const { id, productData } = action.meta.arg;
+        const index = state.products.findIndex(p => p.product_id === parseInt(id));
+        if (index !== -1) {
+          state.products[index] = { ...state.products[index], ...productData };
+        }
       })
       .addCase(adminUpdateProduct.rejected, (state, action) => {
         state.isLoading = false;
@@ -81,6 +95,7 @@ const adminSlice = createSlice({
       .addCase(adminDeleteProduct.fulfilled, (state, action) => {
         state.isLoading = false;
         state.message = action.payload.message;
+        state.products = state.products.filter(product => product.product_id !== action.meta.arg);
       })
       .addCase(adminDeleteProduct.rejected, (state, action) => {
         state.isLoading = false;
@@ -110,6 +125,7 @@ const adminSlice = createSlice({
       .addCase(adminDeleteUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.message = action.payload.message;
+        state.users = state.users.filter(user => user.user_id !== action.meta.arg);
       })
       .addCase(adminDeleteUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -124,6 +140,10 @@ const adminSlice = createSlice({
       .addCase(adminUpdateUserRole.fulfilled, (state, action) => {
         state.isLoading = false;
         state.message = action.payload.message;
+        const index = state.users.findIndex(user => user.user_id === action.meta.arg.id);
+        if (index !== -1) {
+          state.users[index].role = action.meta.arg.role;
+        }
       })
       .addCase(adminUpdateUserRole.rejected, (state, action) => {
         state.isLoading = false;
@@ -153,10 +173,77 @@ const adminSlice = createSlice({
       .addCase(adminUpdateOrderStatus.fulfilled, (state, action) => {
         state.isLoading = false;
         state.message = action.payload.message;
+        const index = state.orders.findIndex(order => order.order_id === action.meta.arg.id);
+        if (index !== -1) {
+          state.orders[index].order_status = action.meta.arg.status;
+        }
       })
       .addCase(adminUpdateOrderStatus.rejected, (state, action) => {
         state.isLoading = false;
         state.error = typeof action.payload === 'string' ? action.payload : (action.payload?.message || "Failed to update order");
+      });
+
+    // Categories
+    builder
+      .addCase(adminGetAllCategories.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(adminGetAllCategories.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.categories = action.payload.data;
+      })
+      .addCase(adminGetAllCategories.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = typeof action.payload === 'string' ? action.payload : (action.payload?.message || "Failed to fetch categories");
+      });
+
+    builder
+      .addCase(adminCreateCategory.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(adminCreateCategory.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(adminCreateCategory.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = typeof action.payload === 'string' ? action.payload : (action.payload?.message || "Failed to create category");
+      });
+
+    builder
+      .addCase(adminUpdateCategory.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(adminUpdateCategory.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload.message;
+        const { id, categoryData } = action.meta.arg;
+        const index = state.categories.findIndex(c => c.category_id === parseInt(id));
+        if (index !== -1) {
+          state.categories[index] = { ...state.categories[index], ...categoryData };
+        }
+      })
+      .addCase(adminUpdateCategory.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = typeof action.payload === 'string' ? action.payload : (action.payload?.message || "Failed to update category");
+      });
+
+    builder
+      .addCase(adminDeleteCategory.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(adminDeleteCategory.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload.message;
+        state.categories = state.categories.filter(c => c.category_id !== action.meta.arg);
+      })
+      .addCase(adminDeleteCategory.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = typeof action.payload === 'string' ? action.payload : (action.payload?.message || "Failed to delete category");
       });
   },
 });

@@ -14,7 +14,7 @@ export const adminGetAllProducts = createAsyncThunk(
   "admin/getAllProducts",
   async (_, thunkApi) => {
     try {
-      const response = await api.get(`api/v1/product`, {
+      const response = await api.get(`api/v1/product/admin/all`, {
         withCredentials: true,
       });
       return response.data;
@@ -129,6 +129,63 @@ export const adminUpdateOrderStatus = createAsyncThunk(
   async ({ id, status }, thunkApi) => {
     try {
       const response = await api.put(`api/v1/order/admin/status/${id}`, { status }, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return thunkApi.rejectWithValue(getErrorMessage(error));
+    }
+  }
+);
+
+// Admin Category Management
+export const adminGetAllCategories = createAsyncThunk(
+  "admin/getAllCategories",
+  async (_, thunkApi) => {
+    try {
+      const response = await api.get(`api/v1/category`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return thunkApi.rejectWithValue(getErrorMessage(error));
+    }
+  }
+);
+
+export const adminCreateCategory = createAsyncThunk(
+  "admin/createCategory",
+  async (categoryData, thunkApi) => {
+    try {
+      const response = await api.post(`api/v1/category/admin`, categoryData, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return thunkApi.rejectWithValue(getErrorMessage(error));
+    }
+  }
+);
+
+export const adminUpdateCategory = createAsyncThunk(
+  "admin/updateCategory",
+  async ({ id, categoryData }, thunkApi) => {
+    try {
+      const response = await api.put(`api/v1/category/admin/${id}`, categoryData, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return thunkApi.rejectWithValue(getErrorMessage(error));
+    }
+  }
+);
+
+export const adminDeleteCategory = createAsyncThunk(
+  "admin/deleteCategory",
+  async (id, thunkApi) => {
+    try {
+      const response = await api.delete(`api/v1/category/admin/${id}`, {
         withCredentials: true,
       });
       return response.data;

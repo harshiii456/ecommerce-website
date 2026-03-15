@@ -1,5 +1,6 @@
 import {
   getAllProducts,
+  getAllProductsAdmin,
   getProductById,
   createProduct,
   updateProduct,
@@ -13,6 +14,11 @@ const getProducts = asyncHandler(async (req, res, next) => {
   const { category_id, search, minPrice, maxPrice } = req.query;
   const products = await getAllProducts({ category_id, search, minPrice, maxPrice });
   res.status(200).json(new ApiResponse(200, products, "Products fetched successfully"));
+});
+
+const adminGetProducts = asyncHandler(async (req, res, next) => {
+  const products = await getAllProductsAdmin();
+  res.status(200).json(new ApiResponse(200, products, "All products fetched successfully for admin"));
 });
 
 const getSingleProduct = asyncHandler(async (req, res, next) => {
@@ -66,6 +72,7 @@ const adminDeleteProduct = asyncHandler(async (req, res, next) => {
 
 export {
   getProducts,
+  adminGetProducts,
   getSingleProduct,
   adminCreateProduct,
   adminUpdateProduct,

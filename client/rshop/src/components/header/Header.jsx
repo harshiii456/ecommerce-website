@@ -102,16 +102,21 @@ const Header = () => {
                         : "/customer/dashboard"
                   }
                   className="nav-link"
-                  onMouseEnter={(event) => {
-                    onMouseEnter(event.currentTarget);
-                  }}
                 >
-                  {isAuthenticated
-                    ? userData?.user_first_name
-                      ? userData.user_first_name
-                      : "Account"
-                    : "Login"}
-                  <div className="icon-con">{icons.arrowdown}</div>
+                  <div
+                    className={`drop-down-wrapper ${hovering ? "active" : ""}`}
+                    onMouseEnter={(event) => {
+                      onMouseEnter(event.currentTarget);
+                    }}
+                  >
+                    {icons.Account}
+                    {isAuthenticated
+                      ? userData?.user_first_name
+                        ? userData.user_first_name
+                        : "Account"
+                      : "Login"}
+                    <div className="icon-con">{icons.arrowdown}</div>
+                  </div>
                 </NavLink>
               </li>
 

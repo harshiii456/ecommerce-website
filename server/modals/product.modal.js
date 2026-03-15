@@ -35,6 +35,17 @@ const getAllProducts = async (filters) => {
   }
 };
 
+const getAllProductsAdmin = async () => {
+  const query = "SELECT * FROM products ORDER BY created_at DESC";
+  try {
+    const [res] = await databaseInstance.query(query);
+    return res;
+  } catch (error) {
+    console.error("DB Error in getAllProductsAdmin:", error);
+    throw new ErrorHandler(500, "Error fetching all products for admin");
+  }
+};
+
 const getProductById = async (id) => {
   const query = "SELECT * FROM products WHERE product_id = ?";
   try {
@@ -81,6 +92,7 @@ const deleteProduct = async (id) => {
 
 export {
   getAllProducts,
+  getAllProductsAdmin,
   getProductById,
   createProduct,
   updateProduct,

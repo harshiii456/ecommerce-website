@@ -25,12 +25,14 @@ import productRouter from "./routes/product.routes.js";
 import interactionRouter from "./routes/user_interaction.routes.js";
 import orderRouter from "./routes/order.routes.js";
 import reviewRouter from "./routes/review.routes.js";
+import categoryRouter from "./routes/category.routes.js";
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/interaction", interactionRouter);
 app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/review", reviewRouter);
+app.use("/api/v1/category", categoryRouter);
 
 import { errorMiddleware } from "./utils/ErrorHandler.js";
 app.use(errorMiddleware);

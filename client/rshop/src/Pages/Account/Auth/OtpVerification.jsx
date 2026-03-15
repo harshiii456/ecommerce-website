@@ -18,7 +18,7 @@ const OtpVerification = () => {
   const inputRef = useRef([]);
 
   const dispatch = useDispatch();
-  const { isLoading,isAuthenticated } = useSelector((state) => state.auth);
+  const { isLoading, isAuthenticated, userData } = useSelector((state) => state.auth);
 
 
   const navigate = useNavigate();
@@ -34,11 +34,16 @@ const OtpVerification = () => {
 
   useEffect(() => {
     if (proceed) {
+      const role = userData?.role || (userData?.user_role_id === 2 ? 'admin' : 'customer');
       setTimeout(() => {
-        navigate("/");
+        if (role === 'admin') {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/customer/dashboard");
+        }
       }, 2000);
     }
-  }, [proceed]);
+  }, [proceed, navigate, userData]);
 
   useEffect(() => {
     if (code.every((digit) => digit !== "")) {
@@ -142,8 +147,12 @@ const OtpVerification = () => {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
-}
+    const role = userData?.role || (userData?.user_role_id === 2 ? 'admin' : 'customer');
+    if (role === 'admin') {
+      return <Navigate to="/admin/dashboard" replace />;
+    }
+    return <Navigate to="/customer/dashboard" replace />;
+  }
 
   return (
     <div className="otp-wrapper">

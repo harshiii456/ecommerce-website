@@ -44,127 +44,174 @@ const AdminProducts = () => {
     );
   }
 
+  const containerStyle = {
+    padding: '2rem',
+    fontFamily: 'system-ui, -apple-system, sans-serif'
+  };
+
+  const headerStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '2rem'
+  };
+
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-8">
+    <div style={containerStyle}>
+      <div style={headerStyle}>
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Product Management</h1>
-          <p className="text-gray-600">Manage your product inventory</p>
+          <h1 style={{ fontSize: '2rem', fontWeight: '800', margin: 0, color: '#1a202c' }}>Product Management</h1>
+          <p style={{ color: '#718096', margin: '0.25rem 0 0 0' }}>Manage your product inventory</p>
         </div>
         <Link
           to="/admin/products/new"
-          className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0.75rem 1.25rem',
+            backgroundColor: '#3182ce',
+            color: 'white',
+            borderRadius: '0.5rem',
+            textDecoration: 'none',
+            fontWeight: '600',
+            transition: 'background-color 0.2s'
+          }}
+          onMouseOver={(e) => e.target.style.backgroundColor = '#2b6cb0'}
+          onMouseOut={(e) => e.target.style.backgroundColor = '#3182ce'}
         >
-          <MdAdd className="mr-2" />
+          <MdAdd style={{ marginRight: '0.5rem' }} />
           Add Product
         </Link>
       </div>
 
       {message && (
-        <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded flex items-center">
-          <MdCheckCircle className="mr-2" />
+        <div style={{
+          marginBottom: '1.5rem',
+          padding: '1rem',
+          backgroundColor: '#f0fff4',
+          border: '1px solid #c6f6d5',
+          color: '#2f855a',
+          borderRadius: '0.5rem',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          <MdCheckCircle style={{ marginRight: '0.5rem' }} />
           {message}
         </div>
       )}
 
       {error && (
-        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded flex items-center">
-          <MdError className="mr-2" />
+        <div style={{
+          marginBottom: '1.5rem',
+          padding: '1rem',
+          backgroundColor: '#fff5f5',
+          border: '1px solid #feb2b2',
+          color: '#c53030',
+          borderRadius: '0.5rem',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          <MdError style={{ marginRight: '0.5rem' }} />
           {typeof error === 'string' ? error : (error?.message || "An error occurred")}
         </div>
       )}
 
       {/* Search */}
-      <div className="mb-6">
+      <div style={{ marginBottom: '1.5rem' }}>
         <input
           type="text"
           placeholder="Search products..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          style={{
+            width: '100%',
+            padding: '0.75rem 1rem',
+            border: '1px solid #e2e8f0',
+            borderRadius: '0.5rem',
+            fontSize: '1rem',
+            outline: 'none',
+            boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.05)'
+          }}
+          onFocus={(e) => e.target.style.borderColor = '#3182ce'}
+          onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
         />
       </div>
 
       {/* Products Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
+      <div style={{ 
+        backgroundColor: 'white', 
+        borderRadius: '0.75rem', 
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', 
+        overflow: 'hidden',
+        border: '1px solid #e2e8f0'
+      }}>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead style={{ backgroundColor: '#f7fafc', borderBottom: '1px solid #e2e8f0' }}>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Product
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Price
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Stock
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+                <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#4a5568', textTransform: 'uppercase' }}>Product</th>
+                <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#4a5568', textTransform: 'uppercase' }}>Price</th>
+                <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#4a5568', textTransform: 'uppercase' }}>Stock</th>
+                <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#4a5568', textTransform: 'uppercase' }}>Status</th>
+                <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#4a5568', textTransform: 'uppercase' }}>Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody style={{ divideY: '1px solid #e2e8f0' }}>
               {filteredProducts?.map((product) => (
-                <tr key={product.product_id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
+                <tr key={product.product_id} style={{ borderBottom: '1px solid #edf2f7' }}>
+                  <td style={{ padding: '1rem 1.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
                       {product.main_image_url ? (
                         <img
                           src={product.main_image_url}
                           alt={product.product_name}
-                          className="h-10 w-10 rounded object-cover mr-3"
+                          style={{ height: '2.5rem', width: '2.5rem', borderRadius: '0.375rem', objectCover: 'cover', marginRight: '1rem' }}
                         />
                       ) : (
-                        <div className="h-10 w-10 bg-gray-200 rounded flex items-center justify-center mr-3">
-                          <MdInventory className="text-gray-400" />
+                        <div style={{ height: '2.5rem', width: '2.5rem', backgroundColor: '#edf2f7', borderRadius: '0.375rem', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '1rem' }}>
+                          <MdInventory style={{ color: '#a0aec0' }} />
                         </div>
                       )}
                       <div>
-                        <div className="text-sm font-medium text-gray-900">
-                          {product.product_name}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          ID: {product.product_id}
-                        </div>
+                        <div style={{ fontSize: '0.875rem', fontWeight: '600', color: '#2d3748' }}>{product.product_name}</div>
+                        <div style={{ fontSize: '0.75rem', color: '#718096' }}>ID: {product.product_id}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">${product.price}</div>
+                  <td style={{ padding: '1rem 1.5rem' }}>
+                    <div style={{ fontSize: '0.875rem', color: '#2d3748' }}>${product.price}</div>
                     {product.discount_price && (
-                      <div className="text-sm text-green-600">${product.discount_price}</div>
+                      <div style={{ fontSize: '0.75rem', color: '#38a169' }}>${product.discount_price}</div>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{product.stock_quantity}</div>
+                  <td style={{ padding: '1rem 1.5rem' }}>
+                    <div style={{ fontSize: '0.875rem', color: '#2d3748' }}>{product.stock_quantity}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      product.is_active
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}>
+                  <td style={{ padding: '1rem 1.5rem' }}>
+                    <span style={{
+                      padding: '0.125rem 0.5rem',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      borderRadius: '9999px',
+                      backgroundColor: product.is_active ? '#def7ec' : '#fde8e8',
+                      color: product.is_active ? '#03543f' : '#9b1c1c'
+                    }}>
                       {product.is_active ? 'Active' : 'Inactive'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-2">
+                  <td style={{ padding: '1rem 1.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.75rem' }}>
                       <Link
                         to={`/admin/products/edit/${product.product_id}`}
-                        className="text-blue-600 hover:text-blue-900"
+                        style={{ color: '#3182ce', textDecoration: 'none' }}
                       >
-                        <MdEdit className="h-5 w-5" />
+                        <MdEdit style={{ fontSize: '1.25rem' }} />
                       </Link>
                       <button
                         onClick={() => handleDelete(product.product_id)}
-                        className="text-red-600 hover:text-red-900"
+                        style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: '#e53e3e' }}
                       >
-                        <MdDelete className="h-5 w-5" />
+                        <MdDelete style={{ fontSize: '1.25rem' }} />
                       </button>
                     </div>
                   </td>
@@ -174,18 +221,27 @@ const AdminProducts = () => {
           </table>
         </div>
         {(!filteredProducts || filteredProducts.length === 0) && (
-          <div className="text-center py-12">
-            <MdInventory className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No products</h3>
-            <p className="mt-1 text-sm text-gray-500">
+          <div style={{ textAlign: 'center', padding: '3rem' }}>
+            <MdInventory style={{ margin: '0 auto', fontSize: '3rem', color: '#cbd5e0' }} />
+            <h3 style={{ marginTop: '1rem', fontSize: '1rem', fontWeight: '600', color: '#2d3748' }}>No products</h3>
+            <p style={{ marginTop: '0.5rem', color: '#718096' }}>
               {searchTerm ? "No products match your search." : "Get started by creating a new product."}
             </p>
-            <div className="mt-6">
+            <div style={{ marginTop: '1.5rem' }}>
               <Link
                 to="/admin/products/new"
-                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: '0.5rem 1rem',
+                  backgroundColor: '#3182ce',
+                  color: 'white',
+                  borderRadius: '0.375rem',
+                  textDecoration: 'none',
+                  fontWeight: '600'
+                }}
               >
-                <MdAdd className="mr-2" />
+                <MdAdd style={{ marginRight: '0.5rem' }} />
                 Add Product
               </Link>
             </div>

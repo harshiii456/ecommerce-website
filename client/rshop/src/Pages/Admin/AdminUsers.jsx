@@ -52,105 +52,140 @@ const AdminUsers = () => {
     );
   }
 
+  const containerStyle = {
+    padding: '2rem',
+    fontFamily: 'system-ui, -apple-system, sans-serif'
+  };
+
+  const headerStyle = {
+    marginBottom: '2rem'
+  };
+
   return (
-    <div className="p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">User Management</h1>
-        <p className="text-gray-600">Manage user accounts and permissions</p>
+    <div style={containerStyle}>
+      <div style={headerStyle}>
+        <h1 style={{ fontSize: '2rem', fontWeight: '800', margin: 0, color: '#1a202c' }}>User Management</h1>
+        <p style={{ color: '#718096', margin: '0.25rem 0 0 0' }}>Manage user accounts and permissions</p>
       </div>
 
       {message && (
-        <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded flex items-center">
-          <MdCheckCircle className="mr-2" />
+        <div style={{
+          marginBottom: '1.5rem',
+          padding: '1rem',
+          backgroundColor: '#f0fff4',
+          border: '1px solid #c6f6d5',
+          color: '#2f855a',
+          borderRadius: '0.5rem',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          <MdCheckCircle style={{ marginRight: '0.5rem' }} />
           {message}
         </div>
       )}
 
       {error && (
-        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded flex items-center">
-          <MdError className="mr-2" />
+        <div style={{
+          marginBottom: '1.5rem',
+          padding: '1rem',
+          backgroundColor: '#fff5f5',
+          border: '1px solid #feb2b2',
+          color: '#c53030',
+          borderRadius: '0.5rem',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          <MdError style={{ marginRight: '0.5rem' }} />
           {typeof error === 'string' ? error : (error?.message || "An error occurred")}
         </div>
       )}
 
       {/* Search */}
-      <div className="mb-6">
+      <div style={{ marginBottom: '1.5rem' }}>
         <input
           type="text"
           placeholder="Search users by name or email..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          style={{
+            width: '100%',
+            padding: '0.75rem 1rem',
+            border: '1px solid #e2e8f0',
+            borderRadius: '0.5rem',
+            fontSize: '1rem',
+            outline: 'none',
+            boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.05)'
+          }}
+          onFocus={(e) => e.target.style.borderColor = '#3182ce'}
+          onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
         />
       </div>
 
       {/* Users Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
+      <div style={{ 
+        backgroundColor: 'white', 
+        borderRadius: '0.75rem', 
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', 
+        overflow: 'hidden',
+        border: '1px solid #e2e8f0'
+      }}>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead style={{ backgroundColor: '#f7fafc', borderBottom: '1px solid #e2e8f0' }}>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  User
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Phone
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Role
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+                <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#4a5568', textTransform: 'uppercase' }}>User</th>
+                <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#4a5568', textTransform: 'uppercase' }}>Email</th>
+                <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#4a5568', textTransform: 'uppercase' }}>Phone</th>
+                <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#4a5568', textTransform: 'uppercase' }}>Role</th>
+                <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#4a5568', textTransform: 'uppercase' }}>Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredUsers?.map((user) => (
-                <tr key={user.user_id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center mr-3">
-                        <MdPeople className="text-gray-400" />
+            <tbody>
+              {filteredUsers?.map((user, index) => (
+                <tr key={user.user_id || index} style={{ borderBottom: '1px solid #edf2f7' }}>
+                  <td style={{ padding: '1rem 1.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div style={{ height: '2.5rem', width: '2.5rem', backgroundColor: '#edf2f7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '1rem' }}>
+                        <MdPeople style={{ color: '#a0aec0' }} />
                       </div>
                       <div>
-                        <div className="text-sm font-medium text-gray-900">
-                          {user.user_first_name} {user.user_last_name}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          ID: {user.user_id}
-                        </div>
+                        <div style={{ fontSize: '0.875rem', fontWeight: '600', color: '#2d3748' }}>{user.user_first_name} {user.user_last_name}</div>
+                        <div style={{ fontSize: '0.75rem', color: '#718096' }}>ID: {user.user_id}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{user.email_id}</div>
+                  <td style={{ padding: '1rem 1.5rem' }}>
+                    <div style={{ fontSize: '0.875rem', color: '#2d3748' }}>{user.email_id}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{user.mobile_number || 'N/A'}</div>
+                  <td style={{ padding: '1rem 1.5rem' }}>
+                    <div style={{ fontSize: '0.875rem', color: '#2d3748' }}>{user.mobile_number || 'N/A'}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td style={{ padding: '1rem 1.5rem' }}>
                     <select
                       value={user.role || 'customer'}
                       onChange={(e) => handleRoleChange(user.user_id, e.target.value)}
-                      className={`text-sm rounded px-2 py-1 font-semibold ${
-                        user.role === 'admin'
-                          ? 'bg-purple-100 text-purple-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}
+                      style={{
+                        padding: '0.25rem 0.5rem',
+                        fontSize: '0.75rem',
+                        fontWeight: '600',
+                        borderRadius: '0.375rem',
+                        border: '1px solid #cbd5e0',
+                        backgroundColor: user.role === 'admin' ? '#f3e8ff' : '#edf2f7',
+                        color: user.role === 'admin' ? '#6b21a8' : '#4a5568',
+                        cursor: 'pointer',
+                        outline: 'none'
+                      }}
                     >
                       <option value="customer">Customer</option>
                       <option value="admin">Admin</option>
                     </select>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <td style={{ padding: '1rem 1.5rem' }}>
                     <button
                       onClick={() => handleDelete(user.user_id)}
-                      className="text-red-600 hover:text-red-900"
+                      style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: '#e53e3e' }}
                     >
-                      <MdDelete className="h-5 w-5" />
+                      <MdDelete style={{ fontSize: '1.25rem' }} />
                     </button>
                   </td>
                 </tr>
@@ -159,10 +194,10 @@ const AdminUsers = () => {
           </table>
         </div>
         {(!filteredUsers || filteredUsers.length === 0) && (
-          <div className="text-center py-12">
-            <MdPeople className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No users</h3>
-            <p className="mt-1 text-sm text-gray-500">
+          <div style={{ textAlign: 'center', padding: '3rem' }}>
+            <MdPeople style={{ margin: '0 auto', fontSize: '3rem', color: '#cbd5e0' }} />
+            <h3 style={{ marginTop: '1rem', fontSize: '1rem', fontWeight: '600', color: '#2d3748' }}>No users</h3>
+            <p style={{ marginTop: '0.5rem', color: '#718096' }}>
               {searchTerm ? "No users match your search." : "No users found in the system."}
             </p>
           </div>

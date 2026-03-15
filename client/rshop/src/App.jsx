@@ -6,6 +6,7 @@ import {
 import "./App.css";
 
 import RootLayout from "../src/Layouts/RootLayout";
+import AdminLayout from "../src/Layouts/AdminLayout";
 import Auth from "./Pages/Account/Auth/Auth";
 import AdminLogin from "./Pages/Account/Auth/AdminLogin";
 import OtpVerification from "./Pages/Account/Auth/OtpVerification";
@@ -21,6 +22,8 @@ import AdminDashboard from "./Pages/Admin/AdminDashboard";
 import AdminProducts from "./Pages/Admin/AdminProducts";
 import AdminUsers from "./Pages/Admin/AdminUsers";
 import AdminOrders from "./Pages/Admin/AdminOrders";
+import AdminProductForm from "./Pages/Admin/AdminProductForm";
+import AdminCategories from "./Pages/Admin/AdminCategories";
 
 import { getCurrentUser } from "./features/auth/authAPI";
 import { useEffect } from "react";
@@ -37,7 +40,9 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getCurrentUser());
+    if (localStorage.getItem("isLoggedIn") === "true") {
+      dispatch(getCurrentUser());
+    }
   }, [dispatch]);
 
   const ProtectedRoute = ({ children }) => {
@@ -82,22 +87,38 @@ const App = () => {
           { path: "wishlist", element: <Wishlist /> },
           { path: "mobile-phone-store", element: <MobilePhoneStore /> },
           { path: "product-list", element: <ProductListing /> },
-          
-          // Admin Routes
+        ],
+      },
+      {
+        path: "/admin",
+        element: <AdminLayout />,
+        children: [
           { 
-            path: "admin/dashboard", 
+            path: "dashboard", 
             element: <AdminRoute><AdminDashboard /></AdminRoute> 
           },
           { 
-            path: "admin/products", 
+            path: "products", 
             element: <AdminRoute><AdminProducts /></AdminRoute> 
           },
           { 
-            path: "admin/users", 
+            path: "products/new", 
+            element: <AdminRoute><AdminProductForm /></AdminRoute> 
+          },
+          { 
+            path: "products/edit/:id", 
+            element: <AdminRoute><AdminProductForm /></AdminRoute> 
+          },
+          { 
+            path: "categories", 
+            element: <AdminRoute><AdminCategories /></AdminRoute> 
+          },
+          { 
+            path: "users", 
             element: <AdminRoute><AdminUsers /></AdminRoute> 
           },
           { 
-            path: "admin/orders", 
+            path: "orders", 
             element: <AdminRoute><AdminOrders /></AdminRoute> 
           },
         ],

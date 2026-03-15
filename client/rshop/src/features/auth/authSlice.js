@@ -7,7 +7,7 @@ const initialState = {
   error: null,
   message: null,
   isLoading: false,
-  isCheckingAuth: false,
+  isCheckingAuth: localStorage.getItem("isLoggedIn") === "true",
 };
 
 const authSlice = createSlice({
@@ -31,6 +31,8 @@ const authSlice = createSlice({
     builder.addCase(getCurrentUser.fulfilled, (state, action) => {
       state.userData = action.payload?.data?.user || action.payload?.data || action.payload;
       state.isAuthenticated = true;
+      state.error = null;
+      localStorage.setItem("isLoggedIn", "true");
       state.isLoading = false;
       state.isCheckingAuth = false;
     });
@@ -51,6 +53,7 @@ const authSlice = createSlice({
       } else {
         state.error = null;
       }
+      localStorage.removeItem("isLoggedIn");
       state.isLoading = false;
       state.isCheckingAuth = false;
     });
@@ -100,11 +103,16 @@ const authSlice = createSlice({
       state.userData = action.payload?.data?.user || action.payload?.data || action.payload;
       state.message = action.payload?.message || "Logged In Successfully";
       state.isAuthenticated = true;
+      localStorage.setItem("isLoggedIn", "true");
       state.isLoading = false;
     });
     builder.addCase(LogIn.rejected, (state, action) => {
       state.isAuthenticated = false;
-      state.error = typeof action.payload === 'string' ? action.payload : (action.payload?.message || "Login failed");
+      const errorMessage = typeof action.payload === 'string' ? action.payload : (action.payload?.message || "Login failed");
+      state.error = errorMessage;
+      if (errorMessage.toLowerCase().includes('unauthorized') || errorMessage.toLowerCase().includes('401')) {
+        localStorage.removeItem("isLoggedIn");
+      }
       state.isLoading = false;
     });
     
@@ -119,6 +127,7 @@ const authSlice = createSlice({
       state.userData = action.payload?.data?.user || action.payload?.data || action.payload;
       state.message = action.payload?.message || "Account Created Successfully";
       state.isAuthenticated = true;
+      localStorage.setItem("isLoggedIn", "true");
       state.isLoading = false;
     });
     builder.addCase(createUser.rejected, (state, action) => {
@@ -136,6 +145,8 @@ const authSlice = createSlice({
     builder.addCase(logOut.fulfilled, (state) => {
       state.userData = null;
       state.isAuthenticated = false;
+      state.isCheckingAuth = false;
+      localStorage.removeItem("isLoggedIn");
       state.isLoading = false;
     });
     builder.addCase(logOut.rejected, (state, action) => {

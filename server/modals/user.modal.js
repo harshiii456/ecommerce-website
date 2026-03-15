@@ -168,8 +168,8 @@ const comparePassword = async function (enteredPassword, dbpassword) {
 };
 
 const generateAccessToken = function (user_id, role) {
-  return jwt.sign({ id: user_id, role: role }, process.env.ASSECC_TOKEN_SECRET, {
-    expiresIn: process.env.ASSECC_TOKEN_EXPIRE,
+  return jwt.sign({ id: user_id, role: role }, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: process.env.ACCESS_TOKEN_EXPIRE,
   });
 };
 

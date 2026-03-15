@@ -80,8 +80,8 @@ const AdminLogin = () => {
       const result = await dispatch(LogIn({ email_id: email, password, otp })).unwrap();
       
       // Check if user is admin
-      const userData = result; // result is already the user object now because of slice extraction
-      if (userData.role === 'admin' || userData.user_role_id === 2) {
+      const userData = result?.data?.user || result?.data || result;
+      if (userData?.role === 'admin' || userData?.user_role_id === 2) {
         navigate("/admin/dashboard");
       } else {
         toast.error("Access denied. This login is for administrators only.");

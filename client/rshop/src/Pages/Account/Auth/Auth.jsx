@@ -10,14 +10,18 @@ import { Navigate } from "react-router-dom";
 const Auth = () => {
     const [signup, setSignup] = useState(false);
     const [loginType, setLoginType] = useState("customer"); // "customer" or "admin"
-    const { message, isLoading, isAuthenticated } = useSelector((state) => state.auth);
+    const { message, isLoading, isAuthenticated, userData } = useSelector((state) => state.auth);
 
     const showSignup = () => {
         setSignup(!signup)
     }
 
     if (isAuthenticated) {
-        return <Navigate to="/" replace />;
+        const role = userData?.role || (userData?.user_role_id === 2 ? 'admin' : 'customer');
+        if (role === 'admin') {
+            return <Navigate to="/admin/dashboard" replace />;
+        }
+        return <Navigate to="/customer/dashboard" replace />;
     }
 
     return (

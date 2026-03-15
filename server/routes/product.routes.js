@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   getProducts,
+  adminGetProducts,
   getSingleProduct,
   adminCreateProduct,
   adminUpdateProduct,
@@ -14,6 +15,7 @@ router.route("/").get(getProducts);
 router.route("/:id").get(getSingleProduct);
 
 // Admin Routes
+router.route("/admin/all").get(verifyJWT, isAdmin, adminGetProducts);
 router.route("/admin").post(verifyJWT, isAdmin, adminCreateProduct);
 router.route("/admin/:id")
   .put(verifyJWT, isAdmin, adminUpdateProduct)
