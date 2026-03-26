@@ -109,8 +109,11 @@ const adminSlice = createSlice({
         state.error = null;
       })
       .addCase(adminGetAllUsers.fulfilled, (state, action) => {
+        console.log("Redux reducer adminGetAllUsers.fulfilled - action.payload:", action.payload);
         state.isLoading = false;
-        state.users = action.payload.data;
+        // Handle both direct data and nested data structures
+        state.users = action.payload.data || action.payload || [];
+        console.log("Redux reducer - state.users after update:", state.users);
       })
       .addCase(adminGetAllUsers.rejected, (state, action) => {
         state.isLoading = false;

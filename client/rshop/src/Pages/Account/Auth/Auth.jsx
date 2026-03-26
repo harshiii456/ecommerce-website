@@ -17,11 +17,12 @@ const Auth = () => {
     }
 
     if (isAuthenticated) {
-        const role = userData?.role || (userData?.user_role_id === 2 ? 'admin' : 'customer');
+        // Handle both Sequelize and plain object formats
+        const role = userData?.dataValues?.role || userData?.role || (userData?.user_role_id === 2 ? 'admin' : 'customer');
         if (role === 'admin') {
             return <Navigate to="/admin/dashboard" replace />;
         }
-        return <Navigate to="/customer/dashboard" replace />;
+        return <Navigate to="/" replace />;
     }
 
     return (

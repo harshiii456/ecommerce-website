@@ -1,13 +1,12 @@
 import {
-  createOrderModal,
-  createOrderItemModal,
-  getOrdersByUserId,
-  getOrderItemsByOrderId,
-  getAllOrdersAdmin,
-  updateOrderStatusModal
-} from "../modals/order.modal.js";
-import { getCartByUserId, findOrCreateCart } from "../modals/user_interaction.modal.js";
-import { databaseInstance } from "../database/database.js";
+  createOrder,
+  getOrdersByUser,
+  getOrderById,
+  adminGetAllOrders,
+  adminUpdateOrderStatus,
+  cancelOrder
+} from "../modals/order.modal.sequelize.js";
+import { getUserCart } from "../modals/user_interaction.modal.sequelize.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -60,7 +59,7 @@ const placeOrder = asyncHandler(async (req, res, next) => {
 });
 
 const getMyOrders = asyncHandler(async (req, res, next) => {
-  const orders = await getOrdersByUserId(req.user.user_id);
+  const orders = await getOrdersByUser(req.user.user_id);
   
   // Optionally fetch items for each order or let frontend fetch per order
   res.status(200).json(new ApiResponse(200, orders, "Orders fetched successfully"));
@@ -73,25 +72,25 @@ const getOrderDetails = asyncHandler(async (req, res, next) => {
 });
 
 // Admin Controllers
-const adminGetAllOrders = asyncHandler(async (req, res, next) => {
-  const orders = await getAllOrdersAdmin();
+const adminGetAllOrdersController = asyncHandler(async (req, res, next) => {
+  const orders = await adminGetAllOrders();
   res.status(200).json(new ApiResponse(200, orders, "All orders fetched successfully"));
 });
 
-const adminUpdateStatus = asyncHandler(async (req, res, next) => {
+const adminUpdateStatusController = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const { status } = req.body;
 
   if (!status) throw new ErrorHandler(400, "Status is required");
 
-  await updateOrderStatusModal(id, status);
-  res.status(200).json(new ApiResponse(200, {}, "Order status updated successfully"));
+  const result = await adminUpdateOrderStatus(id, status);
+  res.status(200).json(new ApiResponse(200, result, "Order status updated successfully"));
 });
 
 export {
   placeOrder,
   getMyOrders,
   getOrderDetails,
-  adminGetAllOrders,
-  adminUpdateStatus
+  adminGetAllOrdersController,
+  adminUpdateStatusController
 };

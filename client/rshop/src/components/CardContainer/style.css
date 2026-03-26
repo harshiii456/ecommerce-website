@@ -28,16 +28,17 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  padding: 2rem 2rem 1rem 2rem;
+  padding: 1.8rem 1.8rem 1rem 1.8rem;
   box-sizing: border-box;
-  /* overflow: hidden; */
 }
 
 .box-container-small .box-container .header .title {
-  font-size: var(--font-size-title);
-  font-weight: var(--font-semibold);
-  color: #000;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1e1b4b;
   word-wrap: break-word;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 
 .box-container-small .box-container .content {
@@ -65,9 +66,14 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
-  font-size: 1.1rem;
-  font-weight: var(--font-normal);
-  color: var(--color-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #6366f1;
+  transition: color 0.3s ease;
+}
+
+.box-container-small .box-container .footer a:hover {
+  color: #4f46e5;
 }
 
 /* Product Store Page Container Style Start */

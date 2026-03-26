@@ -1,8 +1,11 @@
 import {
-  createReviewModal,
-  getReviewsByProductId,
-  deleteReviewModal
-} from "../modals/review.modal.js";
+  createReview,
+  getReviewsByProduct,
+  getReviewsByUser,
+  updateReview,
+  deleteReview,
+  getReviewStats
+} from "../modals/review.modal.sequelize.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { asyncHandler } from "../utils/asyncHandler.js";

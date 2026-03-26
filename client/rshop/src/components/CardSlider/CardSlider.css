@@ -32,9 +32,10 @@
 
 .card-slider .card-container .card-header .header-title {
     flex: 1;
-    font-size: var(--font-size-title);
-    font-weight: var(--font-semibold);
-    color: #000;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e1b4b;
+    letter-spacing: -0.01em;
 }
 
 .card-slider .card-container .card-header .header-btn {
@@ -48,7 +49,14 @@
     box-sizing: border-box;
     border-radius: 5rem;
     padding: 0.5rem;
-    background-color: var(--color-primary);
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    box-shadow: 0 3px 10px rgba(99, 102, 241, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-slider .card-container .card-header .header-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
 }
 
 .card-slider .card-container .card-header .header-btn .icon {

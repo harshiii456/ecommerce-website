@@ -18,7 +18,7 @@ const AdminLogin = () => {
   const { isLoading: authLoading, error, message } = useSelector((state) => state.auth);
 
   // Define admin email
-  const ADMIN_EMAIL = "harshita@gmail.com";
+  const ADMIN_EMAIL = "admin@gmail.com";
 
   const handleUserStatus = async (e) => {
     e.preventDefault();
@@ -79,11 +79,21 @@ const AdminLogin = () => {
     try {
       const result = await dispatch(LogIn({ email_id: email, password, otp })).unwrap();
       
-      // Check if user is admin
+      console.log("Login result:", result);
+      
+      // Check if user is admin - handle both Sequelize and plain object formats
       const userData = result?.data?.user || result?.data || result;
-      if (userData?.role === 'admin' || userData?.user_role_id === 2) {
+      console.log("User data:", userData);
+      
+      // Extract role from Sequelize object or plain object
+      const userRole = userData?.dataValues?.role || userData?.role;
+      console.log("User role:", userRole);
+      
+      if (userRole === 'admin') {
+        console.log("Redirecting to admin dashboard...");
         navigate("/admin/dashboard");
       } else {
+        console.log("Access denied - user role:", userRole);
         toast.error("Access denied. This login is for administrators only.");
         dispatch(logOut());
       }

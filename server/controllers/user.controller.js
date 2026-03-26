@@ -4,15 +4,15 @@ import {
   generateRefreshToken,
   findUserByEmail,
   newUser,
-  saveVerificationCode,
+  createOTP,
   updateRefreshToken,
-  verificationAttempt,
-  getAllUsers,
+  findOTP,
+  updateOTPVerification,
+  adminGetAllUsers,
   deleteUser,
-  updatePasswordByEmail,
-  updateResetToken,
-  updateUserRole
-} from "../modals/user.modal.js";
+  adminUpdateUserRole,
+  adminDeleteAllUsers
+} from "../modals/user.modal.sequelize.js";
 
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
@@ -53,13 +53,20 @@ const sendVerificationCode = async (email_id, verificationCode) => {
 
 const generateAccessAndRefreshTokens = async (user_id, role) => {
   try {
+    console.log("Generating tokens for user_id:", user_id, "role:", role);
+    console.log("ACCESS_TOKEN_SECRET:", process.env.ACCESS_TOKEN_SECRET ? "exists" : "missing");
+    console.log("ACCESS_TOKEN_EXPIRE:", process.env.ACCESS_TOKEN_EXPIRE);
+    
     const accessToken = generateAccessToken(user_id, role);
     const refreshToken = generateRefreshToken(user_id, role);
+    
+    console.log("Tokens generated successfully");
 
     await updateRefreshToken({ refreshToken, user_id });
 
     return { accessToken, refreshToken };
   } catch (error) {
+    console.error("Token generation error:", error);
     throw new ErrorHandler(
       401,
       "Something went wrong while generating refresh and access token"
@@ -110,12 +117,20 @@ const sendOTP = asyncHandler(async (req, res, next) => {
 
   const verificationCode = await generateVerificationCode();
 
-  const verfication = await saveVerificationCode({
+  const user = await findUserByEmail(email_id);
+  const user_id = user.length > 0 ? user[0].user_id : null;
+
+  const expires_at = new Date();
+  expires_at.setMinutes(expires_at.getMinutes() + 10);
+
+  const verfication = await createOTP({
+    user_id,
     email_id,
-    verificationCode,
+    otp: verificationCode,
+    expires_at
   });
 
-  if (!verfication?.insertId) {
+  if (!verfication) {
     throw new ErrorHandler(
       500,
       "Something went wrong while sending otp ,please try again."
@@ -154,11 +169,11 @@ const createUser = asyncHandler(async (req, res, next) => {
 
   const userRegisterd = await newUser({ email_id, password: hashedPassword });
 
-  if (!userRegisterd?.insertId) {
+  if (!userRegisterd?.user_id) {
     throw new ErrorHandler(500, "cant register,please try again.");
   }
 
-  const user = await findUser(userRegisterd?.insertId);
+  const user = await findUser(userRegisterd.user_id);
 
   if (!user[0]) {
     throw new ErrorHandler(
@@ -186,7 +201,11 @@ const createUser = asyncHandler(async (req, res, next) => {
       new ApiResponse(
         200,
         {
-          user: (() => { const { password, ...rest } = user[0]; return rest; })(),
+          user: (() => { 
+            const u = user[0].get ? user[0].get({ plain: true }) : user[0];
+            const { password, ...rest } = u; 
+            return rest; 
+          })(),
           accessToken,
           refreshToken,
         },
@@ -205,22 +224,22 @@ const loginUser = asyncHandler(async (req, res, next) => {
   let user = await findUserByEmail(email_id);
 
   // Special handling for admin login
-  if (email_id === 'harshita@gmail.com') {
+  if (email_id === 'admin@gmail.com') {
     if (!user[0]) {
       // Create admin user if not exists
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash('admin_default_pass', salt); // Dummy password as OTP is used
       const userRegisterd = await newUser({ email_id, password: hashedPassword });
-      if (userRegisterd?.insertId) {
-        await updateUserRole(userRegisterd.insertId, 'admin');
-        const newUserDetails = await findUser(userRegisterd.insertId);
-        user = newUserDetails;
+      if (userRegisterd?.user_id) {
+        await adminUpdateUserRole(userRegisterd.user_id, 'admin');
+        const newUserDetails = await findUser(userRegisterd.user_id);
+        user = newUserDetails; // newUserDetails is already an array [user]
       } else {
         throw new ErrorHandler(500, "Failed to create admin user");
       }
     } else if (user[0].role !== 'admin') {
       // Update existing user to admin role if they are the special admin email
-      await updateUserRole(user[0].user_id, 'admin');
+      await adminUpdateUserRole(user[0].user_id, 'admin');
       const updatedUserDetails = await findUserByEmail(email_id);
       user = updatedUserDetails;
     }
@@ -229,6 +248,10 @@ const loginUser = asyncHandler(async (req, res, next) => {
   if (!user[0]) {
     throw new ErrorHandler(400, "User not found");
   }
+
+  console.log("User found:", user[0]);
+  console.log("User ID:", user[0].user_id);
+  console.log("User role:", user[0].role);
 
   // Password check is skipped because OTP is verified by verifyOTP middleware
   /*
@@ -258,7 +281,11 @@ const loginUser = asyncHandler(async (req, res, next) => {
       new ApiResponse(
         200,
         {
-          user: (() => { const { password, ...rest } = user[0]; return rest; })(),
+          user: (() => { 
+            const u = user[0].get ? user[0].get({ plain: true }) : user[0];
+            const { password, ...rest } = u; 
+            return rest; 
+          })(),
           accessToken,
           refreshToken,
         },
@@ -285,6 +312,16 @@ const logoutUser = asyncHandler(async (req, res, next) => {
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
     .json(new ApiResponse(200, {}, "User logged Out"));
+});
+
+// Temporary endpoint to delete all users
+const deleteAllUsersController = asyncHandler(async (req, res, next) => {
+  try {
+    const result = await adminDeleteAllUsers();
+    return res.status(200).json(new ApiResponse(200, { deletedCount: result }, "All users deleted successfully"));
+  } catch (error) {
+    return res.status(500).json(new ApiResponse(500, null, "Error deleting users"));
+  }
 });
 
 const refreshAccessToken = asyncHandler(async (req, res, next) => {
@@ -341,8 +378,7 @@ const refreshAccessToken = asyncHandler(async (req, res, next) => {
 });
 
 const getCurrentUser = asyncHandler(async (req, res, next) => {
-  const user = req.user;
-
+  const user = req.user.get ? req.user.get({ plain: true }) : req.user;
   res.status(200).json(new ApiResponse(200, user, "loged in user"));
 });
 
@@ -405,18 +441,13 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 });
 
 // Admin Controllers
-const adminGetAllUsers = asyncHandler(async (req, res, next) => {
-  const users = await getAllUsers();
-  res.status(200).json(new ApiResponse(200, users, "All users fetched successfully"));
-});
-
-const adminDeleteUser = asyncHandler(async (req, res, next) => {
+const adminDeleteUserController = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   await deleteUser(id);
   res.status(200).json(new ApiResponse(200, {}, "User deleted successfully"));
 });
 
-const adminUpdateUserRole = asyncHandler(async (req, res, next) => {
+const adminUpdateUserRoleController = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const { role } = req.body;
 
@@ -424,7 +455,7 @@ const adminUpdateUserRole = asyncHandler(async (req, res, next) => {
     throw new ErrorHandler(400, "Valid role (admin/customer) is required");
   }
 
-  await updateUserRole(id, role);
+  await adminUpdateUserRole(id, role);
   res.status(200).json(new ApiResponse(200, {}, "User role updated successfully"));
 });
 
@@ -439,6 +470,7 @@ export {
   forgotPassword,
   resetPassword,
   adminGetAllUsers,
-  adminDeleteUser,
-  adminUpdateUserRole
+  adminDeleteUserController,
+  adminUpdateUserRoleController,
+  deleteAllUsersController
 };

@@ -12,10 +12,29 @@ const AdminUsers = () => {
   const dispatch = useDispatch();
   const { users, isLoading, error, message } = useSelector((state) => state.admin);
   const [searchTerm, setSearchTerm] = useState("");
+  const [localLoading, setLocalLoading] = useState(true);
+
+  console.log("AdminUsers component - users:", users);
+  console.log("AdminUsers component - isLoading:", isLoading);
+  console.log("AdminUsers component - error:", error);
+  console.log("AdminUsers component - localLoading:", localLoading);
 
   useEffect(() => {
     dispatch(adminGetAllUsers());
+    // Set a timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      setLocalLoading(false);
+    }, 3000); // 3 seconds timeout
+    
+    return () => clearTimeout(timeout);
   }, [dispatch]);
+
+  // Update local loading when global loading changes or when users data arrives
+  useEffect(() => {
+    if (!isLoading && (users || users?.length > 0)) {
+      setLocalLoading(false);
+    }
+  }, [isLoading, users]);
 
   useEffect(() => {
     if (message) {
@@ -38,16 +57,46 @@ const AdminUsers = () => {
     }
   };
 
-  const filteredUsers = users?.filter(user =>
-    user.email_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.user_first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.user_last_name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredUsers = users?.filter(user => {
+    // Handle both Sequelize and plain object formats
+    const email = user?.dataValues?.email_id || user?.email_id;
+    const firstName = user?.dataValues?.user_first_name || user?.user_first_name;
+    const lastName = user?.dataValues?.user_last_name || user?.user_last_name;
+    
+    console.log("Filtering user - email:", email, "firstName:", firstName, "lastName:", lastName);
+    
+    return email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           lastName?.toLowerCase().includes(searchTerm.toLowerCase());
+  }) || [];
 
-  if (isLoading) {
+  console.log("Filtered users:", filteredUsers);
+
+  if (isLoading || localLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+        <div style={{ 
+          width: '40px', 
+          height: '40px', 
+          border: '4px solid #f3f3f3', 
+          borderTop: '4px solid #3498db', 
+          borderRadius: '50%', 
+          animation: 'spin 1s linear infinite' 
+        }}></div>
+      </div>
+    );
+  }
+
+  // Show loading skeleton if no users yet but not loading
+  if (!users || users.length === 0) {
+    return (
+      <div style={{ padding: '2rem' }}>
+        <div style={{ marginBottom: '2rem' }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#2d3748' }}>Manage Users</h2>
+        </div>
+        <div style={{ textAlign: 'center', padding: '3rem', backgroundColor: 'white', borderRadius: '0.75rem' }}>
+          <div style={{ marginBottom: '1rem' }}>Loading users...</div>
+        </div>
       </div>
     );
   }
@@ -141,37 +190,40 @@ const AdminUsers = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredUsers?.map((user, index) => (
-                <tr key={user.user_id || index} style={{ borderBottom: '1px solid #edf2f7' }}>
+              {filteredUsers?.map((user, index) => {
+                // Handle both Sequelize and plain object formats
+                const userData = user?.dataValues || user;
+                return (
+                <tr key={userData.user_id || index} style={{ borderBottom: '1px solid #edf2f7' }}>
                   <td style={{ padding: '1rem 1.5rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <div style={{ height: '2.5rem', width: '2.5rem', backgroundColor: '#edf2f7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '1rem' }}>
                         <MdPeople style={{ color: '#a0aec0' }} />
                       </div>
                       <div>
-                        <div style={{ fontSize: '0.875rem', fontWeight: '600', color: '#2d3748' }}>{user.user_first_name} {user.user_last_name}</div>
-                        <div style={{ fontSize: '0.75rem', color: '#718096' }}>ID: {user.user_id}</div>
+                        <div style={{ fontSize: '0.875rem', fontWeight: '600', color: '#2d3748' }}>{userData.user_first_name} {userData.user_last_name}</div>
+                        <div style={{ fontSize: '0.75rem', color: '#718096' }}>ID: {userData.user_id}</div>
                       </div>
                     </div>
                   </td>
                   <td style={{ padding: '1rem 1.5rem' }}>
-                    <div style={{ fontSize: '0.875rem', color: '#2d3748' }}>{user.email_id}</div>
+                    <div style={{ fontSize: '0.875rem', color: '#2d3748' }}>{userData.email_id}</div>
                   </td>
                   <td style={{ padding: '1rem 1.5rem' }}>
-                    <div style={{ fontSize: '0.875rem', color: '#2d3748' }}>{user.mobile_number || 'N/A'}</div>
+                    <div style={{ fontSize: '0.875rem', color: '#2d3748' }}>{userData.mobile_number || 'N/A'}</div>
                   </td>
                   <td style={{ padding: '1rem 1.5rem' }}>
                     <select
-                      value={user.role || 'customer'}
-                      onChange={(e) => handleRoleChange(user.user_id, e.target.value)}
+                      value={userData.role || 'customer'}
+                      onChange={(e) => handleRoleChange(userData.user_id, e.target.value)}
                       style={{
                         padding: '0.25rem 0.5rem',
                         fontSize: '0.75rem',
                         fontWeight: '600',
                         borderRadius: '0.375rem',
                         border: '1px solid #cbd5e0',
-                        backgroundColor: user.role === 'admin' ? '#f3e8ff' : '#edf2f7',
-                        color: user.role === 'admin' ? '#6b21a8' : '#4a5568',
+                        backgroundColor: userData.role === 'admin' ? '#f3e8ff' : '#edf2f7',
+                        color: userData.role === 'admin' ? '#6b21a8' : '#4a5568',
                         cursor: 'pointer',
                         outline: 'none'
                       }}
@@ -182,14 +234,14 @@ const AdminUsers = () => {
                   </td>
                   <td style={{ padding: '1rem 1.5rem' }}>
                     <button
-                      onClick={() => handleDelete(user.user_id)}
+                      onClick={() => handleDelete(userData.user_id)}
                       style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: '#e53e3e' }}
                     >
                       <MdDelete style={{ fontSize: '1.25rem' }} />
                     </button>
                   </td>
                 </tr>
-              ))}
+              )})}
             </tbody>
           </table>
         </div>

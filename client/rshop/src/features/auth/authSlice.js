@@ -149,9 +149,14 @@ const authSlice = createSlice({
       localStorage.removeItem("isLoggedIn");
       state.isLoading = false;
     });
-    builder.addCase(logOut.rejected, (state, action) => {
-      state.error = action.payload;
+    // Always clear session even if server logout fails
+    builder.addCase(logOut.rejected, (state) => {
+      state.userData = null;
+      state.isAuthenticated = false;
+      state.isCheckingAuth = false;
+      localStorage.removeItem("isLoggedIn");
       state.isLoading = false;
+      state.error = null;
     });
   },
 });

@@ -1,11 +1,12 @@
 import {
   getAllProducts,
-  getAllProductsAdmin,
   getProductById,
-  createProduct,
-  updateProduct,
-  deleteProduct
-} from "../modals/product.modal.js";
+  adminCreateProduct,
+  adminUpdateProduct,
+  adminDeleteProduct,
+  getProductsByCategory,
+  searchProducts
+} from "../modals/product.modal.sequelize.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -17,7 +18,7 @@ const getProducts = asyncHandler(async (req, res, next) => {
 });
 
 const adminGetProducts = asyncHandler(async (req, res, next) => {
-  const products = await getAllProductsAdmin();
+  const products = await getAllProducts(); // Use existing function
   res.status(200).json(new ApiResponse(200, products, "All products fetched successfully for admin"));
 });
 
@@ -29,14 +30,14 @@ const getSingleProduct = asyncHandler(async (req, res, next) => {
   res.status(200).json(new ApiResponse(200, product[0], "Product fetched successfully"));
 });
 
-const adminCreateProduct = asyncHandler(async (req, res, next) => {
+const adminCreateProductController = asyncHandler(async (req, res, next) => {
   const { product_name, category_id, description, price, stock_quantity, main_image_url } = req.body;
 
   if (!product_name || !price) {
     throw new ErrorHandler(400, "Product name and price are required");
   }
 
-  const result = await createProduct({
+  const result = await adminCreateProduct({
     product_name,
     category_id,
     description,
@@ -45,28 +46,28 @@ const adminCreateProduct = asyncHandler(async (req, res, next) => {
     main_image_url
   });
 
-  res.status(201).json(new ApiResponse(201, { product_id: result.insertId }, "Product created successfully"));
+  res.status(201).json(new ApiResponse(201, result, "Product created successfully"));
 });
 
-const adminUpdateProduct = asyncHandler(async (req, res, next) => {
+const adminUpdateProductController = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const product = await getProductById(id);
-  if (!product[0]) {
+  if (!product) {
     throw new ErrorHandler(404, "Product not found");
   }
 
-  await updateProduct(id, req.body);
-  res.status(200).json(new ApiResponse(200, {}, "Product updated successfully"));
+  const result = await adminUpdateProduct(id, req.body);
+  res.status(200).json(new ApiResponse(200, result, "Product updated successfully"));
 });
 
-const adminDeleteProduct = asyncHandler(async (req, res, next) => {
+const adminDeleteProductController = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const product = await getProductById(id);
-  if (!product[0]) {
+  if (!product) {
     throw new ErrorHandler(404, "Product not found");
   }
 
-  await deleteProduct(id);
+  await adminDeleteProduct(id);
   res.status(200).json(new ApiResponse(200, {}, "Product deleted successfully"));
 });
 
@@ -74,7 +75,7 @@ export {
   getProducts,
   adminGetProducts,
   getSingleProduct,
-  adminCreateProduct,
-  adminUpdateProduct,
-  adminDeleteProduct
+  adminCreateProductController,
+  adminUpdateProductController,
+  adminDeleteProductController
 };

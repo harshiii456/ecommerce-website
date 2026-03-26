@@ -28,19 +28,19 @@ export const DropDownMenuItem = [
     title: "My Profile",
     img: icons.Account,
     path: "/customer/dashboard",
-    authorized: false,
+    authorized: true,
   },
   {
     title: "wishlist",
     img: icons.heart,
     path: "/wishlist",
-    authorized: false,
+    authorized: true,
   },
   {
     title: "Orders",
     img: icons.oders,
     path: "/orders",
-    authorized: false,
+    authorized: true,
   },
   {
     title: "Admin Dashboard",
@@ -108,38 +108,42 @@ export const CategoriesBarItem = [
 export const CategoriesNavItem = [
   {
     title: "Grocery",
-    path: "/Grocery-store",
+    img: categoryBarImagepath.grocery,
+    path: "/product-list?category_id=1",
   },
   {
     title: "Mobile",
-    path: "/mobile-phone-store",
+    img: categoryBarImagepath.mobile,
+    path: "/product-list?category_id=1",
   },
   {
     title: "Electronics",
-    path: "",
+    img: categoryBarImagepath.electronics,
+    path: "/product-list?category_id=4",
   },
   {
     title: "TVs & Appliances",
-    path: "",
+    img: categoryBarImagepath.appliences,
+    path: "/product-list?category_id=4",
   },
   {
-    title: "Men",
-    path: "",
-  },
-  {
-    title: "Women",
-    path: "",
-  },
-  {
-    title: "Baby & Kids",
-    path: "",
+    title: "Fashion",
+    img: categoryBarImagepath.fashion,
+    path: "/product-list?category_id=3",
   },
   {
     title: "Home & Furniture",
-    path: "",
+    img: categoryBarImagepath.furniture,
+    path: "/product-list?category_id=5",
   },
   {
-    title: "Flight Booking",
+    title: "Toys",
+    img: categoryBarImagepath.toys,
+    path: "/product-list?category_id=5",
+  },
+  {
+    title: "Travel",
+    img: categoryBarImagepath.aroplane,
     path: "/booking",
   },
 ];

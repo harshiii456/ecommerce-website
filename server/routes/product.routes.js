@@ -3,9 +3,9 @@ import {
   getProducts,
   adminGetProducts,
   getSingleProduct,
-  adminCreateProduct,
-  adminUpdateProduct,
-  adminDeleteProduct
+  adminCreateProductController,
+  adminUpdateProductController,
+  adminDeleteProductController
 } from "../controllers/product.controller.js";
 import { verifyJWT, isAdmin } from "../middlewares/auth.middleware.js";
 
@@ -16,9 +16,9 @@ router.route("/:id").get(getSingleProduct);
 
 // Admin Routes
 router.route("/admin/all").get(verifyJWT, isAdmin, adminGetProducts);
-router.route("/admin").post(verifyJWT, isAdmin, adminCreateProduct);
+router.route("/admin").post(verifyJWT, isAdmin, adminCreateProductController);
 router.route("/admin/:id")
-  .put(verifyJWT, isAdmin, adminUpdateProduct)
-  .delete(verifyJWT, isAdmin, adminDeleteProduct);
+  .put(verifyJWT, isAdmin, adminUpdateProductController)
+  .delete(verifyJWT, isAdmin, adminDeleteProductController);
 
 export default router;

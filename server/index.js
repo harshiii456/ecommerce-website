@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import { connectDB } from "./database/database.js";
+import { sequelize } from "./database/models/index.js";
 
 import { app } from "./app.js";
 
@@ -10,12 +11,23 @@ dotenv.config({
 const port = process.env.PORT || 3000;
 
 (async () => {
-  console.log("--- STARTING RSHOP BACKEND WITH STABILITY FIXES V1.1 ---");
+  console.log("--- STARTING RSHOP BACKEND WITH SEPARATE DATABASES ---");
+  
+  // Connect to main database (for now)
   await connectDB();
-
-  const server = app.listen(port, () => {
+  
+  // Test models
+  console.log("Testing Sequelize models...");
+  try {
+    await sequelize.sync({ alter: false });
+    console.log("Models initialized successfully!");
+  } catch (error) {
+    console.error("Error initializing models:", error);
+  }
+  
+  app.listen(port, () => {
     console.log(`server is running on http://localhost:${port}`);
-    console.log(`SUCCESS: All auth, proxy, and database fixes are active.`);
+    console.log("SUCCESS: Database system is active and connected.");
   });
 })();
 

@@ -1,8 +1,8 @@
 import { Router } from "express";
 import {
   getCart,
-  addToCart,
-  removeFromCartController,
+  addProductToCart,
+  removeProductFromCart,
   getWishlist,
   toggleWishlist
 } from "../controllers/user_interaction.controller.js";
@@ -13,8 +13,8 @@ const router = Router();
 router.use(verifyJWT);
 
 // Cart Routes
-router.route("/cart").get(getCart).post(addToCart);
-router.route("/cart/:cart_item_id").delete(removeFromCartController);
+router.route("/cart").get(getCart).post(addProductToCart);
+router.route("/cart/:product_id").delete(removeProductFromCart);
 
 // Wishlist Routes
 router.route("/wishlist").get(getWishlist).post(toggleWishlist);

@@ -1,9 +1,7 @@
 import {
-  deleteVerificaionUsers,
-  getVerificaionCode,
-  updateVerificationAttempt,
-  verificationAttempt,
-} from "../modals/user.modal.js";
+  findOTP,
+  updateOTPVerification
+} from "../modals/user.modal.sequelize.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 
@@ -17,96 +15,35 @@ const verifyOTP = asyncHandler(async (req, res, next) => {
   if (!otp) {
     throw new ErrorHandler(400, "otp is required");
   }
+
   // Special admin code bypass (handle this before any DB calls)
-  if (email_id === 'harshita@gmail.com' && otp === '0456') {
+  if (email_id === 'admin@gmail.com' && otp === '0456') {
     return next();
   }
 
-  const userAllEntries = await getVerificaionCode(email_id);
+  const otpEntries = await findOTP(email_id);
 
-  if (userAllEntries.length === 0) {
+  if (otpEntries.length === 0) {
     throw new ErrorHandler(400, "Resend OTP");
   }
 
-  let user;
+  const otpRecord = otpEntries[0];
 
-  if (userAllEntries.length > 1) {
-    user = userAllEntries[0];
-  } else {
-    user = userAllEntries[0];
+  // Check if OTP has expired
+  if (new Date() > otpRecord.expires_at) {
+    throw new ErrorHandler(400, "OTP has expired");
   }
 
-  const inccoectAttemts = await verificationAttempt(email_id);
-
-  if (inccoectAttemts[0].count > 10) {
-    await deleteVerificaionUsers(email_id);
-
-    throw new ErrorHandler(
-      403,
-      "Maximum verification attempts reached. Please go back and try again"
-    );
+  // Check if OTP matches
+  if (otpRecord.otp !== otp) {
+    throw new ErrorHandler(400, "Invalid OTP");
   }
 
-  if (user.otp_code !== otp) {
-    await updateVerificationAttempt(user.otp_id);
-
-    throw new ErrorHandler(401, "OTP is incorrect");
-  }
-
-  const currentTime = Date.now();
-  const verificationCodeExpire = new Date(user.otp_code_expires).getTime();
-
-  if (currentTime > verificationCodeExpire) {
-    await updateVerificationAttempt(user.otp_id);
-
-    throw new ErrorHandler(410, "OTP is Expire");
-  }
-
-  await deleteVerificaionUsers(email_id);
+  // Mark OTP as verified
+  await updateOTPVerification(email_id);
 
   next();
 });
 
 export { verifyOTP };
-
-// const verifyOTP = asyncHandler(async (req, res, next) => {
-//   const { email_id, otp } = req.body;
-
-//   if (!email_id) {
-//     throw new ErrorHandler(401, "Email is required");
-//   }
-
-//   if (!otp) {
-//     throw new ErrorHandler(401, "otp is required");
-//   }
-
-//   const userAllEntries = await getVerificaionCode(email_id);
-
-//   if (!userAllEntries?.length > 0) {
-//     throw new ErrorHandler(400, "Resend OTP");
-//   }
-
-//   let user;
-
-//   if (userAllEntries.length > 1) {
-//     user = userAllEntries[0];
-//   } else {
-//     user = userAllEntries[0];
-//   }
-
-//   await deleteVerificaionUsers(email_id);
-
-//   if (user.otp_code !== otp) {
-//     throw new ErrorHandler(400, "Invalid OTP");
-//   }
-
-//   const currentTime = Date.now();
-//   const verificationCodeExpire = new Date(user.otp_code_expires).getTime();
-
-//   if (currentTime > verificationCodeExpire) {
-//     throw new ErrorHandler(400, "OTP Expire");
-//   }
-
-//   next();
-// });
 

@@ -2,9 +2,9 @@ import { Router } from "express";
 import {
   getCategories,
   getSingleCategory,
-  adminCreateCategory,
-  adminUpdateCategory,
-  adminDeleteCategory
+  adminCreateCategoryController,
+  adminUpdateCategoryController,
+  adminDeleteCategoryController
 } from "../controllers/category.controller.js";
 import { verifyJWT, isAdmin } from "../middlewares/auth.middleware.js";
 
@@ -14,9 +14,9 @@ router.route("/").get(getCategories);
 router.route("/:id").get(getSingleCategory);
 
 // Admin Routes
-router.route("/admin").post(verifyJWT, isAdmin, adminCreateCategory);
+router.route("/admin").post(verifyJWT, isAdmin, adminCreateCategoryController);
 router.route("/admin/:id")
-  .put(verifyJWT, isAdmin, adminUpdateCategory)
-  .delete(verifyJWT, isAdmin, adminDeleteCategory);
+  .put(verifyJWT, isAdmin, adminUpdateCategoryController)
+  .delete(verifyJWT, isAdmin, adminDeleteCategoryController);
 
 export default router;

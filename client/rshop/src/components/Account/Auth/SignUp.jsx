@@ -52,7 +52,7 @@ const SignUp = ({ showSignup }) => {
       dispatch(clearErrorsMassage());
       const userStatusResult = await dispatch(userStatus(userData)).unwrap();
       if (userStatusResult.message === "VERIFIED") {
-        toast.info("You are already register with us,please sign in");
+        toast("You are already register with us,please sign in", { icon: "ℹ️" });
         setValue("email", "");
         showSignup();
         return false;

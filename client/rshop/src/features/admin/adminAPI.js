@@ -74,8 +74,10 @@ export const adminGetAllUsers = createAsyncThunk(
       const response = await api.get(`api/v1/user/admin/all-users`, {
         withCredentials: true,
       });
+      console.log("API Response adminGetAllUsers:", response.data);
       return response.data;
     } catch (error) {
+      console.error("API Error adminGetAllUsers:", error);
       return thunkApi.rejectWithValue(getErrorMessage(error));
     }
   }

@@ -5,7 +5,7 @@ const productPrice = ["100", "500", "15000", "2000", "4000", "300"];
 const productName = ["aaa", "bbb", "ccc", "dddd"];
 
 const numberArray = [];
-for (var i = 1; i <= 15; i++) {
+for (var i = 1; i <= 25; i++) {
     const rni = Math.floor(Math.random() * productImage.length);
     const rnp = Math.floor(Math.random() * productPrice.length);
 
@@ -19,7 +19,7 @@ for (var i = 1; i <= 15; i++) {
 export const productsData = numberArray;
 
 const numberArray1 = [];
-for (var i = 1; i <= 4; i++) {
+for (var i = 1; i <= 8; i++) {
     const rni = Math.floor(Math.random() * productImage.length);
     const rnn = Math.floor(Math.random() * productName.length);
 

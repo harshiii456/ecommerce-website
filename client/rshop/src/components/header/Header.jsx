@@ -175,7 +175,7 @@ const Header = () => {
           </div>
         </div>
 
-        {!isHome && <CategoriesNav />}
+        <CategoriesNav />
       </div>
     </>
   );

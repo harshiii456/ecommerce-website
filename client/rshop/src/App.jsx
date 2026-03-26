@@ -56,7 +56,9 @@ const App = () => {
     if (!isAuthenticated) {
       return <Navigate to="/auth" replace />;
     }
-    if (!userData || (userData.role !== 'admin' && userData.user_role_id !== 2)) {
+    // Handle both Sequelize and plain object formats
+    const role = userData?.dataValues?.role || userData?.role;
+    if (!userData || (role !== 'admin' && userData.user_role_id !== 2)) {
       return <Navigate to="/" replace />;
     }
     return children;

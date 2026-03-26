@@ -1,238 +1,151 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 import { Link } from "react-router-dom";
-import { adminGetAllUsers, adminGetAllOrders, adminGetAllProducts } from "../../features/admin/adminAPI";
-import { clearErrors } from "../../features/admin/adminSlice";
-import { MdDashboard, MdPeople, MdShoppingCart, MdInventory, MdError, MdCheckCircle, MdCategory } from "react-icons/md";
+import { MdInventory, MdPeople, MdShoppingCart } from "react-icons/md";
 
 const AdminDashboard = () => {
-  const dispatch = useDispatch();
-  const { products, users, orders, isLoading, error, message } = useSelector((state) => state.admin);
-
-  useEffect(() => {
-    if (message || error) {
-      const timer = setTimeout(() => dispatch(clearErrors()), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [message, error, dispatch]);
-
-  // No longer blocking the entire UI with a spinner
-  // The 3 main sections are static links and should be visible immediately
-
   const containerStyle = {
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     padding: '2rem',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    fontFamily: 'system-ui, -apple-system, sans-serif',
-    color: '#1a202c'
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
   };
 
-  const headerStyle = {
-    textAlign: 'center',
-    marginBottom: '3rem'
+  const dashboardStyle = {
+    background: 'white',
+    borderRadius: '20px',
+    padding: '3rem',
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+    maxWidth: '800px',
+    width: '100%',
+    textAlign: 'center'
   };
 
   const titleStyle = {
     fontSize: '2.5rem',
-    fontWeight: '800',
-    color: '#1a202c',
-    marginBottom: '0.5rem',
-    letterSpacing: '-0.025em'
+    fontWeight: 'bold',
+    color: '#2d3748',
+    marginBottom: '1rem',
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text'
   };
 
   const subtitleStyle = {
-    fontSize: '1.125rem',
-    color: '#718096'
+    fontSize: '1.1rem',
+    color: '#718096',
+    marginBottom: '3rem'
   };
 
   const gridStyle = {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
     gap: '2rem',
     marginTop: '2rem'
   };
 
   const cardStyle = {
+    background: 'white',
+    borderRadius: '15px',
+    padding: '2rem',
+    border: '2px solid #e2e8f0',
+    textDecoration: 'none',
+    transition: 'all 0.3s ease',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    textAlign: 'center',
-    padding: '2.5rem',
-    backgroundColor: 'white',
-    borderRadius: '1.25rem',
-    border: '1px solid #e2e8f0',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-    transition: 'all 0.3s ease',
-    textDecoration: 'none',
     cursor: 'pointer'
   };
 
-  const iconContainerStyle = (color) => ({
-    width: '5rem',
-    height: '5rem',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: '1.5rem',
-    backgroundColor: color,
-    transition: 'all 0.3s ease'
+  const iconStyle = (color) => ({
+    fontSize: '3rem',
+    color: color,
+    marginBottom: '1rem'
   });
 
   const cardTitleStyle = {
-    fontSize: '1.5rem',
-    fontWeight: '700',
+    fontSize: '1.3rem',
+    fontWeight: '600',
     color: '#2d3748',
-    marginBottom: '0.75rem'
+    marginBottom: '0.5rem'
   };
 
   const cardDescStyle = {
+    fontSize: '0.9rem',
     color: '#718096',
-    marginBottom: '1.5rem',
-    fontSize: '1rem',
-    lineHeight: '1.5'
+    lineHeight: '1.4'
   };
-
-  const buttonStyle = (color) => ({
-    width: '100%',
-    padding: '0.75rem',
-    borderRadius: '0.75rem',
-    backgroundColor: color,
-    color: 'white',
-    fontWeight: '600',
-    textAlign: 'center',
-    transition: 'background-color 0.3s ease'
-  });
 
   return (
     <div style={containerStyle}>
-      <div style={headerStyle}>
-        <h1 style={titleStyle}>Admin Control Center</h1>
-        <p style={subtitleStyle}>Select a section to manage your store</p>
-      </div>
+      <div style={dashboardStyle}>
+        <h1 style={titleStyle}>Admin Dashboard</h1>
+        <p style={subtitleStyle}>Manage your e-commerce store</p>
+        
+        <div style={gridStyle}>
+          {/* Manage Products */}
+          <Link
+            to="/admin/products"
+            style={cardStyle}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-5px)';
+              e.currentTarget.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.3)';
+              e.currentTarget.style.borderColor = '#667eea';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.borderColor = '#e2e8f0';
+            }}
+          >
+            <MdInventory style={iconStyle('#667eea')} />
+            <h3 style={cardTitleStyle}>Manage Products</h3>
+            <p style={cardDescStyle}>Add, edit, and manage your product inventory</p>
+          </Link>
 
-      {message && (
-        <div style={{
-          marginBottom: '1.5rem',
-          padding: '1rem 1.5rem',
-          backgroundColor: '#f0fff4',
-          borderLeft: '4px solid #48bb78',
-          color: '#2f855a',
-          borderRadius: '0.5rem',
-          display: 'flex',
-          alignItems: 'center',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-        }}>
-          <MdCheckCircle style={{ marginRight: '0.75rem', fontSize: '1.25rem' }} />
-          <span style={{ fontWeight: '500' }}>{message}</span>
+          {/* Manage Users */}
+          <Link
+            to="/admin/users"
+            style={cardStyle}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-5px)';
+              e.currentTarget.style.boxShadow = '0 10px 30px rgba(72, 187, 120, 0.3)';
+              e.currentTarget.style.borderColor = '#48bb78';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.borderColor = '#e2e8f0';
+            }}
+          >
+            <MdPeople style={iconStyle('#48bb78')} />
+            <h3 style={cardTitleStyle}>Manage Users</h3>
+            <p style={cardDescStyle}>View and manage user accounts and permissions</p>
+          </Link>
+
+          {/* View Orders */}
+          <Link
+            to="/admin/orders"
+            style={cardStyle}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-5px)';
+              e.currentTarget.style.boxShadow = '0 10px 30px rgba(159, 122, 234, 0.3)';
+              e.currentTarget.style.borderColor = '#9f7aea';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.borderColor = '#e2e8f0';
+            }}
+          >
+            <MdShoppingCart style={iconStyle('#9f7aea')} />
+            <h3 style={cardTitleStyle}>View Orders</h3>
+            <p style={cardDescStyle}>Track orders and manage fulfillment</p>
+          </Link>
         </div>
-      )}
-
-      {error && (
-        <div style={{
-          marginBottom: '1.5rem',
-          padding: '1rem 1.5rem',
-          backgroundColor: '#fff5f5',
-          borderLeft: '4px solid #f56565',
-          color: '#c53030',
-          borderRadius: '0.5rem',
-          display: 'flex',
-          alignItems: 'center',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-        }}>
-          <MdError style={{ marginRight: '0.75rem', fontSize: '1.25rem' }} />
-          <span style={{ fontWeight: '500' }}>{typeof error === 'string' ? error : (error?.message || "An error occurred")}</span>
-        </div>
-      )}
-
-      <div style={gridStyle}>
-        {/* Manage Products */}
-        <Link
-          to="/admin/products"
-          style={cardStyle}
-          className="admin-card"
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-5px)';
-            e.currentTarget.style.boxShadow = '0 12px 20px rgba(0, 0, 0, 0.1)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.05)';
-          }}
-        >
-          <div style={iconContainerStyle('#ebf8ff')}>
-            <MdInventory style={{ fontSize: '2.5rem', color: '#3182ce' }} />
-          </div>
-          <h2 style={cardTitleStyle}>Manage Products</h2>
-          <p style={cardDescStyle}>Add, edit, and track your product inventory with ease.</p>
-          <div style={buttonStyle('#3182ce')}>Go to Products</div>
-        </Link>
-
-        {/* Manage Users */}
-        <Link
-          to="/admin/users"
-          style={cardStyle}
-          className="admin-card"
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-5px)';
-            e.currentTarget.style.boxShadow = '0 12px 20px rgba(0, 0, 0, 0.1)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.05)';
-          }}
-        >
-          <div style={iconContainerStyle('#f0fff4')}>
-            <MdPeople style={{ fontSize: '2.5rem', color: '#38a169' }} />
-          </div>
-          <h2 style={cardTitleStyle}>Manage Users</h2>
-          <p style={cardDescStyle}>Monitor user accounts, roles, and registration status.</p>
-          <div style={buttonStyle('#38a169')}>Go to Users</div>
-        </Link>
-
-        {/* View Orders */}
-        <Link
-          to="/admin/orders"
-          style={cardStyle}
-          className="admin-card"
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-5px)';
-            e.currentTarget.style.boxShadow = '0 12px 20px rgba(0, 0, 0, 0.1)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.05)';
-          }}
-        >
-          <div style={iconContainerStyle('#faf5ff')}>
-            <MdShoppingCart style={{ fontSize: '2.5rem', color: '#805ad5' }} />
-          </div>
-          <h2 style={cardTitleStyle}>View Orders</h2>
-          <p style={cardDescStyle}>Track sales, update order statuses, and manage fulfillment.</p>
-          <div style={buttonStyle('#805ad5')}>Go to Orders</div>
-        </Link>
-
-        {/* Manage Categories */}
-        <Link
-          to="/admin/categories"
-          style={cardStyle}
-          className="admin-card"
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-5px)';
-            e.currentTarget.style.boxShadow = '0 12px 20px rgba(0, 0, 0, 0.1)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.05)';
-          }}
-        >
-          <div style={iconContainerStyle('#fffbeb')}>
-            <MdCategory style={{ fontSize: '2.5rem', color: '#d97706' }} />
-          </div>
-          <h2 style={cardTitleStyle}>Manage Categories</h2>
-          <p style={cardDescStyle}>Create and organize your store categories for better navigation.</p>
-          <div style={buttonStyle('#d97706')}>Go to Categories</div>
-        </Link>
       </div>
     </div>
   );

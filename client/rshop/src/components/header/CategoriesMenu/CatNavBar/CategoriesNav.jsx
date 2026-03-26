@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./CategoriesNav.css";
+import { Link } from "react-router-dom";
 
 import { icons } from "../../../../common/Path";
 import { CategoriesNavItem } from "../../../../common/Element";
@@ -24,33 +25,32 @@ const CategoriesNav = () => {
       }}
     >
       <ul className="nav-list">
-        {CategoriesNavItem.map((category, index) =>
-          category.path === "" ? (
-            <li
-              className="nav-item"
-              key={index}
-              onMouseEnter={(event) => {
+        {CategoriesNavItem.map((category, index) => (
+          <Link
+            to={category.path}
+            className="nav-item-with-img"
+            key={index}
+            onMouseEnter={(event) => {
+              if (category.path === "") {
                 setHovering(index);
                 setMenuCategory(category.title);
-              }}
-            >
-              {category.title}
-              {icons.arrowdown}
-            </li>
-          ) : (
-            <li
-              className="nav-item"
-              style={{ cursor: "pointer" }}
-              key={index}
-              onMouseEnter={() => {
+              } else {
                 setHovering(null);
                 setMenuCategory(null);
-              }}
-            >
-              {category.title}
-            </li>
-          )
-        )}
+              }
+            }}
+          >
+            {category.img && (
+              <div className="cat-img-con">
+                <img src={category.img} alt={category.title} />
+              </div>
+            )}
+            <div className="cat-title-con">
+              <span>{category.title}</span>
+              {category.path === "" && icons.arrowdown}
+            </div>
+          </Link>
+        ))}
 
         <Menu
           hovering={hovering}

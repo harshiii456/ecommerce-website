@@ -26,8 +26,16 @@ const CustomerLogin = ({ showSignup }) => {
 
     setIsLoading(true);
     try {
-      await dispatch(userStatus({ email_id: email })).unwrap();
+      const response = await dispatch(userStatus({ email_id: email })).unwrap();
+      
+      if (response && (response.data?.userStatus === 'NOT_FOUND' || response.message === 'NOT_FOUND')) {
+        toast.error("User not found, please sign up");
+        return;
+      }
+      
+      await dispatch(sendOTP({ email_id: email })).unwrap();
       setShowOtp(true);
+      toast.success("OTP sent to your email");
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -67,7 +75,7 @@ const CustomerLogin = ({ showSignup }) => {
       // Redirect customers to home page
       const userData = result.data?.user || result.data || {};
       if (userData.role === 'customer' || !userData.role || userData.user_role_id !== 2) {
-        navigate("/customer/dashboard");
+        navigate("/");
       } else {
         toast.error("Admin users should use the admin login page.");
         dispatch(logOut());

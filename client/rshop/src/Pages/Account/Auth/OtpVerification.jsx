@@ -39,7 +39,7 @@ const OtpVerification = () => {
         if (role === 'admin') {
           navigate("/admin/dashboard");
         } else {
-          navigate("/customer/dashboard");
+          navigate("/");
         }
       }, 2000);
     }
@@ -151,7 +151,7 @@ const OtpVerification = () => {
     if (role === 'admin') {
       return <Navigate to="/admin/dashboard" replace />;
     }
-    return <Navigate to="/customer/dashboard" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return (

@@ -10,9 +10,11 @@ import {
   forgotPassword,
   resetPassword,
   adminGetAllUsers,
-  adminDeleteUser,
-  adminUpdateUserRole
+  adminDeleteUserController,
+  adminUpdateUserRoleController,
+  deleteAllUsersController
 } from "../controllers/user.controller.js";
+import { createTestCustomer } from "../create-customer-endpoint.js";
 
 import { verifyJWT, isAdmin } from "../middlewares/auth.middleware.js";
 import { verifyOTP } from "../middlewares/verifyUser.middleware.js";
@@ -31,9 +33,16 @@ router.route("/me").get(verifyJWT, getCurrentUser);
 router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password").post(resetPassword);
 
+// Temporary route without authentication for creating test customer
+router.route("/temp/create-customer").post(createTestCustomer);
+
 // Admin Routes
 router.route("/admin/all-users").get(verifyJWT, isAdmin, adminGetAllUsers);
-router.route("/admin/user/:id").delete(verifyJWT, isAdmin, adminDeleteUser);
-router.route("/admin/user/:id/role").put(verifyJWT, isAdmin, adminUpdateUserRole);
+router.route("/admin/user/:id").delete(verifyJWT, isAdmin, adminDeleteUserController);
+router.route("/admin/user/:id/role").put(verifyJWT, isAdmin, adminUpdateUserRoleController);
+router.route("/admin/delete-all").delete(verifyJWT, isAdmin, deleteAllUsersController);
+
+// Temporary route without authentication for deleting all users
+router.route("/temp/delete-all").delete(deleteAllUsersController);
 
 export default router;
