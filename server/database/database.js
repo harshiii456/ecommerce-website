@@ -3,12 +3,12 @@ import { Sequelize, DataTypes } from "sequelize";
 // Main database connection (for shared data like products, orders, etc.)
 const sequelize = new Sequelize(
   process.env.NAME,
-  process.env.USER,
-  process.env.PASS,
+  process.env.USER || 'root',
+  process.env.PASS || '',
   {
-    host: process.env.HOST,
+    host: process.env.HOST || 'localhost',
     dialect: "mysql",
-    logging: false,
+    logging: console.log, // Enable logging to debug
     pool: {
       max: 10,
       min: 0,

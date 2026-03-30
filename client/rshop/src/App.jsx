@@ -12,9 +12,12 @@ import AdminLogin from "./Pages/Account/Auth/AdminLogin";
 import OtpVerification from "./Pages/Account/Auth/OtpVerification";
 import CustomerDashboard from "./Pages/Account/CustomerDashboard";
 import Cart from "./Pages/Cart/Cart";
+import Checkout from "./Pages/Checkout/Checkout";
 import Wishlist from "./Pages/Wishlist/Wishlist";
 import Home from "./Pages/Home/Home";
 import ProductListing from "./Pages/ProductListing/ProductListing";
+import ProductDetails from "./Pages/ProductDetails/ProductDetails";
+import CustomerCare from "./Pages/CustomerCare/CustomerCare";
 import MobilePhoneStore from "./Pages/ProductStore/MobilePhoneStore";
 
 // Admin Pages
@@ -86,9 +89,12 @@ const App = () => {
             element: <ProtectedRoute><CustomerDashboard /></ProtectedRoute> 
           },
           { path: "cart", element: <Cart /> },
+          { path: "checkout", element: <ProtectedRoute><Checkout /></ProtectedRoute> },
           { path: "wishlist", element: <Wishlist /> },
           { path: "mobile-phone-store", element: <MobilePhoneStore /> },
           { path: "product-list", element: <ProductListing /> },
+          { path: "product/:id", element: <ProductDetails /> },
+          { path: "customer-care", element: <CustomerCare /> },
         ],
       },
       {

@@ -18,7 +18,7 @@ const getUserCart = async (userId) => {
             {
               model: Product,
               as: 'product',
-              attributes: ['product_id', 'product_name', 'product_image', 'price', 'stock_quantity', 'is_active']
+              attributes: ['product_id', 'product_name', 'main_image_url', 'price', 'discount_price', 'stock_quantity', 'is_active']
             }
           ]
         }
@@ -173,37 +173,22 @@ const clearCart = async (userId) => {
 // Get user wishlist
 const getUserWishlist = async (userId) => {
   try {
-    let wishlist = await Wishlist.findOne({
+    const items = await Wishlist.findAll({
       where: { user_id: userId },
       include: [
         {
-          model: WishlistItem,
-          as: 'wishlistItems',
-          include: [
-            {
-              model: Product,
-              as: 'product',
-              attributes: ['product_id', 'product_name', 'product_image', 'price', 'stock_quantity', 'is_active']
-            }
-          ]
+          model: Product,
+          as: 'product',
+          attributes: ['product_id', 'product_name', 'main_image_url', 'price', 'discount_price', 'stock_quantity', 'is_active']
         }
       ]
     });
 
-    // Create wishlist if it doesn't exist
-    if (!wishlist) {
-      wishlist = await Wishlist.create({ user_id: userId });
-      wishlist.wishlistItems = []; // Empty wishlist items array
-    }
-
-    // Filter out inactive products
-    if (wishlist.wishlistItems) {
-      wishlist.wishlistItems = wishlist.wishlistItems.filter(item => 
-        item.product && item.product.is_active
-      );
-    }
-
-    return wishlist;
+    // Return in a structure consistent with frontend expectations
+    return {
+      user_id: userId,
+      wishlistItems: items.filter(item => item.product && item.product.is_active)
+    };
   } catch (error) {
     console.error("DB Error in getUserWishlist:", error);
     throw new ErrorHandler(500, "Error fetching wishlist");
@@ -219,15 +204,9 @@ const addToWishlist = async (userId, productId) => {
       throw new ErrorHandler(404, "Product not available");
     }
 
-    // Get or create wishlist
-    let wishlist = await Wishlist.findOne({ where: { user_id: userId } });
-    if (!wishlist) {
-      wishlist = await Wishlist.create({ user_id: userId });
-    }
-
     // Check if item already exists in wishlist
-    const existingItem = await WishlistItem.findOne({
-      where: { wishlist_id: wishlist.wishlist_id, product_id: productId }
+    const existingItem = await Wishlist.findOne({
+      where: { user_id: userId, product_id: productId }
     });
 
     if (existingItem) {
@@ -235,8 +214,8 @@ const addToWishlist = async (userId, productId) => {
     }
 
     // Add new item
-    await WishlistItem.create({
-      wishlist_id: wishlist.wishlist_id,
+    await Wishlist.create({
+      user_id: userId,
       product_id: productId
     });
 
@@ -250,13 +229,8 @@ const addToWishlist = async (userId, productId) => {
 // Remove item from wishlist
 const removeFromWishlist = async (userId, productId) => {
   try {
-    const wishlist = await Wishlist.findOne({ where: { user_id: userId } });
-    if (!wishlist) {
-      throw new ErrorHandler(404, "Wishlist not found");
-    }
-
-    const affectedCount = await WishlistItem.destroy({
-      where: { wishlist_id: wishlist.wishlist_id, product_id: productId }
+    const affectedCount = await Wishlist.destroy({
+      where: { user_id: userId, product_id: productId }
     });
 
     if (affectedCount === 0) {
@@ -273,13 +247,8 @@ const removeFromWishlist = async (userId, productId) => {
 // Check if item is in wishlist
 const isInWishlist = async (userId, productId) => {
   try {
-    const wishlist = await Wishlist.findOne({ where: { user_id: userId } });
-    if (!wishlist) {
-      return false;
-    }
-
-    const item = await WishlistItem.findOne({
-      where: { wishlist_id: wishlist.wishlist_id, product_id: productId }
+    const item = await Wishlist.findOne({
+      where: { user_id: userId, product_id: productId }
     });
 
     return !!item;
@@ -293,7 +262,9 @@ const isInWishlist = async (userId, productId) => {
 const moveToCart = async (userId, productId, quantity = 1) => {
   try {
     // Remove from wishlist
-    await removeFromWishlist(userId, productId);
+    await Wishlist.destroy({
+      where: { user_id: userId, product_id: productId }
+    });
     
     // Add to cart
     return await addToCart(userId, productId, quantity);

@@ -24,10 +24,10 @@ const adminGetProducts = asyncHandler(async (req, res, next) => {
 
 const getSingleProduct = asyncHandler(async (req, res, next) => {
   const product = await getProductById(req.params.id);
-  if (!product[0]) {
+  if (!product) {
     throw new ErrorHandler(404, "Product not found");
   }
-  res.status(200).json(new ApiResponse(200, product[0], "Product fetched successfully"));
+  res.status(200).json(new ApiResponse(200, product, "Product fetched successfully"));
 });
 
 const adminCreateProductController = asyncHandler(async (req, res, next) => {

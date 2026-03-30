@@ -7,7 +7,6 @@ import { OrderItem } from './OrderItem.js';
 import { Cart } from './Cart.js';
 import { CartItem } from './CartItem.js';
 import { Wishlist } from './Wishlist.js';
-import { WishlistItem } from './WishlistItem.js';
 import { Review } from './Review.js';
 import { OTPVerification } from './OTPVerification.js';
 
@@ -21,7 +20,6 @@ const models = {
   Cart: Cart(sequelize, DataTypes),
   CartItem: CartItem(sequelize, DataTypes),
   Wishlist: Wishlist(sequelize, DataTypes),
-  WishlistItem: WishlistItem(sequelize, DataTypes),
   Review: Review(sequelize, DataTypes),
   OTPVerification: OTPVerification(sequelize, DataTypes),
 };

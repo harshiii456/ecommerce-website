@@ -58,8 +58,8 @@ export const User = (sequelize, DataTypes) => {
     // User has one Cart
     User.hasOne(models.Cart, { foreignKey: 'user_id', as: 'cart' });
     
-    // User has one Wishlist
-    User.hasOne(models.Wishlist, { foreignKey: 'user_id', as: 'wishlist' });
+    // User has many Wishlist entries
+    User.hasMany(models.Wishlist, { foreignKey: 'user_id', as: 'wishlistItems' });
     
     // User has many Reviews
     User.hasMany(models.Review, { foreignKey: 'user_id', as: 'reviews' });

@@ -29,10 +29,6 @@ export const CartItem = (sequelize, DataTypes) => {
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
     }
   }, {
     tableName: 'cart_items',

@@ -33,8 +33,14 @@ const ProductListing = ({}) => {
         <div className="filter-section">
           <h1>Categories</h1>
           <div className="category-item active">
-            {icons.arrowLeft}
-            <span>Men's Sports Shoes</span>
+            {icons.arrowright}
+            <span>All Categories</span>
+          </div>
+          <div className="category-item">
+            <span>Electronics</span>
+          </div>
+          <div className="category-item">
+            <span>Fashion</span>
           </div>
         </div>
 
@@ -44,10 +50,12 @@ const ProductListing = ({}) => {
       <main className="results-content">
         <header className="results-header">
           <div className="search-info">
-            {searchQuery ? (
-              <h1>Showing {products.length} results for "{searchQuery}"</h1>
+            {isLoading ? (
+              <h1>Searching...</h1>
+            ) : searchQuery ? (
+              <h1>{products.length} Results for "{searchQuery}"</h1>
             ) : (
-              <h1>Showing all products</h1>
+              <h1>Discover All Products</h1>
             )}
           </div>
           
@@ -67,7 +75,10 @@ const ProductListing = ({}) => {
 
         <section className="products-grid-container">
           {isLoading ? (
-            <div className="loading">Loading products...</div>
+            <div className="loading">
+              <div className="loader"></div>
+              <span>Finding the best products for you...</span>
+            </div>
           ) : error ? (
             <div className="error">{typeof error === 'string' ? error : (error?.message || "An error occurred")}</div>
           ) : (
@@ -77,7 +88,10 @@ const ProductListing = ({}) => {
                   <ProductCard data={data} key={index} />
                 ))
               ) : (
-                <div className="empty">No products found for "{searchQuery}"</div>
+                <div className="empty">
+                  <h2>No products found</h2>
+                  <p>Try searching for something else or browse categories.</p>
+                </div>
               )}
             </div>
           )}

@@ -1,0 +1,241 @@
+.customer-care-page {
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  color: white;
+  padding: 6rem 2rem;
+  text-align: center;
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+}
+
+.hero-section p {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  margin-bottom: 2.5rem;
+}
+
+.search-bar {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 1.25rem 2rem;
+  padding-right: 4rem;
+  border-radius: 40px;
+  border: none;
+  font-size: 1.1rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.search-bar button {
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #6366f1;
+  color: white;
+  border: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.search-bar button:hover {
+  background: #4f46e5;
+}
+
+.main-content {
+  max-width: 1200px;
+  margin: -4rem auto 4rem;
+  padding: 0 2rem;
+}
+
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px);
+}
+
+.icon-box {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+}
+
+.blue { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+.green { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+.purple { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+
+.stat-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: #1e1b4b;
+}
+
+.stat-card p {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.support-sections {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 4rem;
+}
+
+.contact-channels {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.contact-channels h2, .faq-section h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1e1b4b;
+  margin-bottom: 0.5rem;
+}
+
+.channel {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+}
+
+.channel-icon {
+  width: 3rem;
+  height: 3rem;
+  background: #f1f5f9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6366f1;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.channel-info h3 {
+  font-size: 1.1rem;
+  color: #1e1b4b;
+  margin-bottom: 0.5rem;
+}
+
+.channel-info p {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.highlight {
+  color: #6366f1;
+  font-weight: 700;
+}
+
+.chat-btn, .email-btn {
+  background: #6366f1;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chat-btn:hover, .email-btn:hover {
+  background: #4f46e5;
+  transform: scale(1.05);
+}
+
+.faq-item {
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+}
+
+.faq-item h3 {
+  font-size: 1.1rem;
+  color: #1e1b4b;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.faq-item p {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.view-all-faq {
+  background: transparent;
+  border: 2px solid #e2e8f0;
+  color: #64748b;
+  padding: 1rem 3rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 1rem;
+  transition: all 0.2s ease;
+}
+
+.view-all-faq:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #1e1b4b;
+}
+
+@media (max-width: 1024px) {
+  .support-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .quick-stats {
+    grid-template-columns: 1fr;
+  }
+  .hero-section h1 {
+    font-size: 2.25rem;
+  }
+}

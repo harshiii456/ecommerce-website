@@ -10,6 +10,9 @@ import { getUserCart } from "../modals/user_interaction.modal.sequelize.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ErrorHandler } from "../utils/ErrorHandler.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import models from "../database/models/index.js";
+
+const { CartItem } = models;
 
 const placeOrder = asyncHandler(async (req, res, next) => {
   const { shipping_address, payment_method = "CARD" } = req.body;
@@ -19,43 +22,42 @@ const placeOrder = asyncHandler(async (req, res, next) => {
     throw new ErrorHandler(400, "Shipping address is required");
   }
 
-  const cartItems = await getCartByUserId(user_id);
+  // Get cart items
+  const cart = await getUserCart(user_id);
+  const cartItems = cart?.cartItems || [];
   if (cartItems.length === 0) {
     throw new ErrorHandler(400, "Cannot place order with an empty cart");
   }
 
   let total_amount = 0;
+  const items = [];
   cartItems.forEach(item => {
-    total_amount += (item.discount_price || item.price) * item.quantity;
+    const price = item.product.discount_price || item.product.price;
+    total_amount += price * item.quantity;
+    items.push({
+      product_id: item.product_id,
+      quantity: item.quantity
+    });
   });
 
-  const order_id = await createOrderModal({
+  // Create order
+  const order = await createOrder({
     user_id,
+    items,
     total_amount,
     shipping_address,
     payment_method
   });
 
-  for (const item of cartItems) {
-    await createOrderItemModal({
-      order_id,
-      product_id: item.product_id,
-      quantity: item.quantity,
-      unit_price: item.discount_price || item.price
-    });
-
-    // Decrement stock
-    await databaseInstance.query(
-      "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ?",
-      [item.quantity, item.product_id]
-    );
-  }
-
   // Clear cart
-  const cart_id = await findOrCreateCart(user_id);
-  await databaseInstance.query("DELETE FROM cart_items WHERE cart_id = ?", [cart_id]);
+  await CartItem.destroy({
+    where: { 
+      cart_id: cart.cart_id,
+      product_id: cartItems.map(item => item.product_id)
+    }
+  });
 
-  res.status(201).json(new ApiResponse(201, { order_id }, "Order placed successfully"));
+  res.status(201).json(new ApiResponse(201, { order_id: order.order_id }, "Order placed successfully"));
 });
 
 const getMyOrders = asyncHandler(async (req, res, next) => {

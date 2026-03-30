@@ -8,17 +8,20 @@ export const Wishlist = (sequelize, DataTypes) => {
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
       references: {
         model: 'user_master',
         key: 'user_id'
       }
     },
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
+    product_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'products',
+        key: 'product_id'
+      }
     },
-    updated_at: {
+    created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
     }
@@ -26,16 +29,18 @@ export const Wishlist = (sequelize, DataTypes) => {
     tableName: 'wishlist',
     timestamps: false,
     indexes: [
-      { unique: true, fields: ['user_id'] }
+      { fields: ['user_id'] },
+      { fields: ['product_id'] },
+      { unique: true, fields: ['user_id', 'product_id'] }
     ]
   });
 
   Wishlist.associate = (models) => {
-    // Wishlist belongs to User
+    // Wishlist entry belongs to a User
     Wishlist.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
     
-    // Wishlist has many WishlistItems
-    Wishlist.hasMany(models.WishlistItem, { foreignKey: 'wishlist_id', as: 'wishlistItems' });
+    // Wishlist entry belongs to a Product
+    Wishlist.belongsTo(models.Product, { foreignKey: 'product_id', as: 'product' });
   };
 
   return Wishlist;

@@ -65,53 +65,51 @@ const CardSlider = ({
 
   return (
     <div className="card-slider">
-      <div className="card-container">
-        <a className="card-header">
-          <div className="header-title">{cardSliderTitle}</div>
-          <div className="header-btn">
-            {icons.arrowRight}
-          </div>
-        </a>
-
-        <div className="card-body">
-          <div
-            className="card-list"
-            ref={cardList}
-            onMouseDown={dragStart}
-            onMouseMove={dragging}
-            onMouseUp={dragStop}
-            onMouseLeave={dragStop}
-            onScroll={handleSlideButton}
-          >
-            {data.map((item, index) => (
-              <HomeProductCard key={index} item={item}/>
-            ))}
-          </div>
-
-          {isButtonVisible && (
-            <>
-              {isLeftScroll && (
-                <button
-                  className="slider-btn left"
-                  id="left"
-                  onClick={() => slideProducts("left")}
-                >
-                 {icons.arrowLeft}
-                </button>
-              )}
-
-              {isRightScroll && (
-                <button
-                  className="slider-btn right"
-                  id="right"
-                  onClick={() => slideProducts("right")}
-                >
-                  {icons.arrowRight}
-                </button>
-              )}
-            </>
-          )}
+      <a className="card-header">
+        <div className="header-title">{cardSliderTitle}</div>
+        <div className="header-btn">
+          {icons.arrowRight}
         </div>
+      </a>
+
+      <div className="card-body">
+        <div
+          className="card-list"
+          ref={cardList}
+          onMouseDown={dragStart}
+          onMouseMove={dragging}
+          onMouseUp={dragStop}
+          onMouseLeave={dragStop}
+          onScroll={handleSlideButton}
+        >
+          {data.map((item, index) => (
+            <HomeProductCard key={index} item={item}/>
+          ))}
+        </div>
+
+        {isButtonVisible && (
+          <>
+            {isLeftScroll && (
+              <button
+                className="slider-btn left"
+                id="left"
+                onClick={() => slideProducts("left")}
+              >
+               {icons.arrowLeft}
+              </button>
+            )}
+
+            {isRightScroll && (
+              <button
+                className="slider-btn right"
+                id="right"
+                onClick={() => slideProducts("right")}
+              >
+                {icons.arrowRight}
+              </button>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

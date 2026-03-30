@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getCart,
   addProductToCart,
+  updateProductQuantity,
   removeProductFromCart,
   getWishlist,
   toggleWishlist
@@ -13,7 +14,7 @@ const router = Router();
 router.use(verifyJWT);
 
 // Cart Routes
-router.route("/cart").get(getCart).post(addProductToCart);
+router.route("/cart").get(getCart).post(addProductToCart).patch(updateProductQuantity);
 router.route("/cart/:product_id").delete(removeProductFromCart);
 
 // Wishlist Routes

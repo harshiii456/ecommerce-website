@@ -1,0 +1,46 @@
+[
+  {
+    "category_id": 11,
+    "category_name": "Beauty & Health"
+  },
+  {
+    "category_id": 3,
+    "category_name": "Electronics"
+  },
+  {
+    "category_id": 8,
+    "category_name": "Fashion"
+  },
+  {
+    "category_id": 12,
+    "category_name": "Grocery"
+  },
+  {
+    "category_id": 10,
+    "category_name": "Home & Furniture"
+  },
+  {
+    "category_id": 5,
+    "category_name": "Hp Laptop"
+  },
+  {
+    "category_id": 4,
+    "category_name": "Ipad"
+  },
+  {
+    "category_id": 7,
+    "category_name": "Laptops"
+  },
+  {
+    "category_id": 2,
+    "category_name": "MAC"
+  },
+  {
+    "category_id": 1,
+    "category_name": "Mobiles"
+  },
+  {
+    "category_id": 15,
+    "category_name": "TV"
+  }
+]

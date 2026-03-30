@@ -2,8 +2,16 @@ import React from "react";
 import "./style.css"
 import { icons } from "../../common/Path";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../features/cart/cartSlice";
+import { toggleWishlistTask } from "../../features/wishlist/wishlistSlice";
+import toast from "react-hot-toast";
 
 const ProductCard = ({data}) => {
+  const dispatch = useDispatch();
+  const { wishlistItems } = useSelector((state) => state.wishlist);
+  const isInWishlist = wishlistItems?.wishlistItems?.some(item => String(item.product_id) === String(data.product_id));
+  
   const discountAmount = data.price - data.discount_price;
   const discountPercentage = data.price > 0 ? Math.round((discountAmount / data.price) * 100) : 0;
 
@@ -15,7 +23,14 @@ const ProductCard = ({data}) => {
             <img src={data.main_image_url} alt={data.product_name} />
           </div>
         </Link>
-        <div className="product-whishlist">
+        <div 
+          className={`product-whishlist ${isInWishlist ? 'active' : ''}`}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dispatch(toggleWishlistTask(data.product_id));
+          }}
+        >
           {icons.heart}
         </div>
 
@@ -42,6 +57,16 @@ const ProductCard = ({data}) => {
           <div className="product-size">
             <span>Free Delivery</span>
           </div>
+
+          <button 
+            className="add-to-cart-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(addToCart({ productId: data.product_id }));
+            }}
+          >
+            {icons.cart} Add to Cart
+          </button>
         </div>
       </div>
     </div>

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import "./Header.css";
-import { useSelector } from "react-redux";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 import { CategoriesNav, Dropdown, DropDownMenu } from "../index";
@@ -9,7 +8,8 @@ import { CategoriesNav, Dropdown, DropDownMenu } from "../index";
 import { DropDownMenuItem } from "../../common/Element";
 import { icons } from "../../common/Path";
 import { logOut } from "../../features/auth/authAPI";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getCart } from "../../features/cart/cartSlice";
 
 const Header = () => {
   const [hovering, setHovering] = useState(false);
@@ -20,6 +20,7 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isAuthenticated, userData } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.cart);
   const [productList, SetProductList] = useState([]);
 
   const location = useLocation();
@@ -35,7 +36,11 @@ const Header = () => {
       SetProductList(data);
     }
     getProductList();
-  }, []);
+    
+    if (isAuthenticated) {
+      dispatch(getCart());
+    }
+  }, [dispatch, isAuthenticated]);
 
   const onMouseEnter = (el) => {
     setHovering(true);
@@ -126,8 +131,13 @@ const Header = () => {
                   setHovering(false);
                 }}
               >
-                <NavLink to="/cart" className="nav-link">
-                  {icons.cart}
+                <NavLink to="/cart" className="nav-link cart-link">
+                  <div className="cart-icon-wrapper">
+                    {icons.cart}
+                    {cartItems?.cartItems?.length > 0 && (
+                      <span className="cart-badge">{cartItems.cartItems.length}</span>
+                    )}
+                  </div>
                   Cart
                 </NavLink>
               </li>
@@ -150,7 +160,7 @@ const Header = () => {
                   setHovering(false);
                 }}
               >
-                <NavLink to="/cart" className="nav-link">
+                <NavLink to="/customer-care" className="nav-link">
                   {icons.customercare}
                   Customer Care
                 </NavLink>

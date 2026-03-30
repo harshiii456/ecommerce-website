@@ -89,7 +89,7 @@ const Home = () => {
 
       <div className="home-container">
         {/* Popular Products */}
-        <div className="grid-container">
+        <div className="grid-container full-width-section">
           <CardSlider
             cardSliderTitle="🔥 Popular Products"
             data={allProducts}
@@ -99,7 +99,7 @@ const Home = () => {
         </div>
 
         {/* Laptops Section */}
-        <div className="grid-container">
+        <div className="grid-container full-width-section">
           <CardSlider
             cardSliderTitle="💻 High-Performance Laptops"
             data={ensureMinProducts(products.filter(p => p.category_id === 2), 20)}
@@ -109,7 +109,7 @@ const Home = () => {
         </div>
 
         {/* Mobile Phones Section */}
-        <div className="grid-container">
+        <div className="grid-container full-width-section">
           <CardSlider
             cardSliderTitle="📱 Latest Smartphones"
             data={ensureMinProducts(products.filter(p => p.category_id === 1), 20)}
@@ -119,7 +119,7 @@ const Home = () => {
         </div>
 
         {/* Fashion Section */}
-        <div className="grid-container">
+        <div className="grid-container full-width-section">
           <CardSlider
             cardSliderTitle="👔 Trendy Fashion"
             data={ensureMinProducts(products.filter(p => p.category_id === 3), 20)}
@@ -129,7 +129,7 @@ const Home = () => {
         </div>
 
         {/* Home & Furniture Section */}
-        <div className="grid-container">
+        <div className="grid-container full-width-section">
           <CardSlider
             cardSliderTitle="🏠 Home & Furniture Essentials"
             data={ensureMinProducts(products.filter(p => p.category_id === 5), 20)}
@@ -139,7 +139,7 @@ const Home = () => {
         </div>
 
         {/* Beauty & Health Section */}
-        <div className="grid-container">
+        <div className="grid-container full-width-section">
           <CardSlider
             cardSliderTitle="✨ Beauty & Personal Care"
             data={ensureMinProducts(products.filter(p => p.category_id === 6), 20)}
@@ -158,8 +158,8 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Best of Electronics - Already defined above but keep it here if you like */}
-        <div className="grid-container">
+        {/* Best of Electronics */}
+        <div className="grid-container full-width-section">
           <CardSlider
             cardSliderTitle="⚡ Best Of Electronics"
             data={electronicsProducts}
