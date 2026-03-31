@@ -13,7 +13,18 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 const getProducts = asyncHandler(async (req, res, next) => {
   const { category_id, search, minPrice, maxPrice } = req.query;
+  console.log("=== API REQUEST RECEIVED ===");
+  console.log("Query params:", { category_id, search, minPrice, maxPrice });
+  
   const products = await getAllProducts({ category_id, search, minPrice, maxPrice });
+  
+  console.log("=== API RESPONSE ===");
+  console.log(`Products found: ${products.length}`);
+  if (products.length > 0) {
+    console.log("First product:", products[0].product_name);
+    console.log("First product category:", products[0].category_id);
+  }
+  
   res.status(200).json(new ApiResponse(200, products, "Products fetched successfully"));
 });
 

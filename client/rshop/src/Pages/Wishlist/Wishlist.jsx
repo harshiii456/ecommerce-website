@@ -52,7 +52,7 @@ const Wishlist = () => {
                     <div className="empty-heart">{icons.heart}</div>
                     <h1>Your Wishlist is Empty!</h1>
                     <p>Add items that you like to your wishlist so you can find them easily later.</p>
-                    <button className="auth-btn" onClick={() => window.location.href = '/product-list'}>Go Shopping</button>
+                    <button className="auth-btn" onClick={() => navigate('/grocery-store')}>Go Shopping</button>
                 </div>
             </div>
         );

@@ -42,7 +42,11 @@ const Cart = () => {
 
     // Process cart data
     const items = cartItems?.cartItems || [];
-    const subtotal = items.reduce((acc, item) => acc + (item.product.discount_price || item.product.price) * item.quantity, 0);
+    const subtotal = items.reduce((acc, item) => {
+        const price = parseFloat(item.product.price) || 0;
+        const discountPrice = parseFloat(item.product.discount_price) || price;
+        return acc + discountPrice * item.quantity;
+    }, 0);
     const shipping = subtotal > 500 ? 0 : 40;
     const total = subtotal + shipping;
 
@@ -57,7 +61,7 @@ const Cart = () => {
                     <img src={shopCart} alt="Empty Cart" />
                     <h1>Your Cart is Empty!</h1>
                     <p>Looks like you haven't added anything to your cart yet.</p>
-                    <button className="auth-btn" onClick={() => window.location.href = '/product-list'}>Shop Now</button>
+                    <button className="auth-btn" onClick={() => window.location.href = '/grocery-store'}>Shop Now</button>
                 </div>
             </div>
         );
@@ -72,7 +76,11 @@ const Cart = () => {
                     </div>
 
                     <div className="items-list">
-                        {items.map((item) => (
+                        {items.map((item) => {
+                            const price = parseFloat(item.product.price) || 0;
+                            const discountPrice = parseFloat(item.product.discount_price) || price;
+                            
+                            return (
                             <div key={item.cart_item_id} className="cart-item">
                                 <div className="item-image">
                                     <img src={item.product.main_image_url} alt={item.product.product_name} />
@@ -82,9 +90,9 @@ const Cart = () => {
                                         <h3>{item.product.product_name}</h3>
                                         <p className="brand">RShop Brand</p>
                                         <div className="item-price">
-                                            <span className="current">₹{item.product.discount_price || item.product.price}</span>
-                                            {item.product.discount_price && (
-                                                <span className="original">₹{item.product.price}</span>
+                                            <span className="current">₹{discountPrice.toFixed(2)}</span>
+                                            {discountPrice < price && (
+                                                <span className="original">₹{price.toFixed(2)}</span>
                                             )}
                                         </div>
                                     </div>
@@ -106,7 +114,8 @@ const Cart = () => {
                                     </div>
                                 </div>
                             </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
 

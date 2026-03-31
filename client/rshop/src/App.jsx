@@ -19,6 +19,12 @@ import ProductListing from "./Pages/ProductListing/ProductListing";
 import ProductDetails from "./Pages/ProductDetails/ProductDetails";
 import CustomerCare from "./Pages/CustomerCare/CustomerCare";
 import MobilePhoneStore from "./Pages/ProductStore/MobilePhoneStore";
+import Grocery from "./Pages/Grocery/Grocery";
+import Electronics from "./Pages/Electronics/Electronics";
+import Fashion from "./Pages/Fashion/Fashion";
+import TVAppliances from "./Pages/TVAppliances/TVAppliances";
+import HomeFurniture from "./Pages/HomeFurniture/HomeFurniture";
+import Toys from "./Pages/Toys/Toys";
 
 // Admin Pages
 import AdminDashboard from "./Pages/Admin/AdminDashboard";
@@ -92,6 +98,12 @@ const App = () => {
           { path: "checkout", element: <ProtectedRoute><Checkout /></ProtectedRoute> },
           { path: "wishlist", element: <Wishlist /> },
           { path: "mobile-phone-store", element: <MobilePhoneStore /> },
+          { path: "grocery-store", element: <Grocery /> },
+          { path: "electronics", element: <Electronics /> },
+          { path: "fashion", element: <Fashion /> },
+          { path: "tv-appliances", element: <TVAppliances /> },
+          { path: "home-furniture", element: <HomeFurniture /> },
+          { path: "toys", element: <Toys /> },
           { path: "product-list", element: <ProductListing /> },
           { path: "product/:id", element: <ProductDetails /> },
           { path: "customer-care", element: <CustomerCare /> },

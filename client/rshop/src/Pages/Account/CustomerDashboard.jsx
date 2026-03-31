@@ -106,10 +106,27 @@ const CustomerDashboard = () => {
             </div>
 
             <div className="sidebar-actions">
-              <Link to="/product-list" className="btn-primary">
-                <MdShoppingCart size={18} /> Shop Products
+              <Link to="/grocery-store" className="btn-primary">
+                <MdShoppingCart size={18} /> Shop Grocery
               </Link>
-              <button className="btn-secondary">
+              <Link to="/electronics" className="btn-secondary">
+                <MdShoppingCart size={18} /> Shop Electronics
+              </Link>
+              <Link to="/fashion" className="btn-secondary">
+                <MdShoppingCart size={18} /> Shop Fashion
+              </Link>
+              <Link to="/tv-appliances" className="btn-secondary">
+                <MdShoppingCart size={18} /> Shop TV & Appliances
+              </Link>
+              <Link to="/home-furniture" className="btn-secondary">
+                <MdShoppingCart size={18} /> Shop Home & Furniture
+              </Link>
+              <Link to="/toys" className="btn-secondary">
+                <MdShoppingCart size={18} /> Shop Toys
+              </Link>
+            </div>
+            <div className="account-settings">
+              <button>
                 <FiSettings size={18} /> Account Settings
               </button>
             </div>
@@ -183,7 +200,7 @@ const CustomerDashboard = () => {
                   <div className="empty-icon"><FiPackage size={48} /></div>
                   <h3>No Orders Found</h3>
                   <p>Looks like you haven't made your first purchase yet. Discover our latest collections!</p>
-                  <Link to="/product-list" className="btn-primary" style={{ width: "auto", padding: "0.8rem 2rem", marginTop: "1rem" }}>
+                  <Link to="/grocery-store" className="btn-primary" style={{ width: "auto", padding: "0.8rem 2rem", marginTop: "1rem" }}>
                     Start Shopping
                   </Link>
                 </div>
@@ -698,7 +715,9 @@ const CustomerDashboard = () => {
           max-width: 300px;
           line-height: 1.5;
         }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes spin {
+          100% { transform: rotate(360deg); }
+        }
       `}</style>
     </div>
   );

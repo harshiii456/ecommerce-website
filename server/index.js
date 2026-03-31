@@ -1,14 +1,12 @@
 import dotenv from "dotenv";
-import { connectDB } from "./database/database.js";
-import { sequelize } from "./database/models/index.js";
-
+import { connectDB, sequelize, DataTypes } from "./database/database.js";
 import { app } from "./app.js";
 
 dotenv.config({
   path: "./.env",
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8001;
 
 (async () => {
   console.log("--- STARTING RSHOP BACKEND WITH SEPARATE DATABASES ---");

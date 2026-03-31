@@ -3,7 +3,7 @@ import React from "react";
 import "./style.css";
 import { HomeImageProductCard } from "../index";
 
-const HomeBoxContainer = ({ containerTitle = "", data }) => {
+const HomeBoxContainer = ({ containerTitle = "", data = [] }) => {
   return (
     <div className="box-container-small">
       <div className="box-container">
@@ -11,11 +11,9 @@ const HomeBoxContainer = ({ containerTitle = "", data }) => {
           <div className="title">{containerTitle}</div>
         </div>
         <div className="content">
-
-          {data.map((item, index) => (
+          {data && data.map((item, index) => (
             <HomeImageProductCard key={index} item={item} />
           ))}
-
         </div>
         <div className="footer">
           <a href="#">See More</a>

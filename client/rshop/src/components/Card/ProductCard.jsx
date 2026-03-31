@@ -12,8 +12,11 @@ const ProductCard = ({data}) => {
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const isInWishlist = wishlistItems?.wishlistItems?.some(item => String(item.product_id) === String(data.product_id));
   
-  const discountAmount = data.price - data.discount_price;
-  const discountPercentage = data.price > 0 ? Math.round((discountAmount / data.price) * 100) : 0;
+  // Convert string prices to numbers for calculations
+  const price = parseFloat(data.price) || 0;
+  const discountPrice = parseFloat(data.discount_price) || price;
+  const discountAmount = price - discountPrice;
+  const discountPercentage = price > 0 ? Math.round((discountAmount / price) * 100) : 0;
 
   return (
     <div className="product-card">
@@ -39,10 +42,10 @@ const ProductCard = ({data}) => {
           <h3 className="product-name">{data.product_name}</h3>
 
           <div className="product-price">
-            <span className="product-discounted-price">₹{data.discount_price || data.price}</span>
-            {data.discount_price < data.price && (
+            <span className="product-discounted-price">₹{discountPrice.toFixed(2)}</span>
+            {discountPrice < price && (
               <>
-                <span className="product-retail-price">₹{data.price}</span>
+                <span className="product-retail-price">₹{price.toFixed(2)}</span>
                 <span className="product-discount-percentage">
                   {discountPercentage}% off
                 </span>

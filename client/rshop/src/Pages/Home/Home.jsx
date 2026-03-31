@@ -1,4 +1,5 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
 
 import { productsCardData, productsData } from "../../common/Data";
@@ -12,11 +13,10 @@ import { CardSlider, HomeBoxContainer } from "../../components";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../features/product/productAPI";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { products, isLoading } = useSelector((state) => state.product);
 
   useEffect(() => {
@@ -29,27 +29,60 @@ const Home = () => {
       // Generate fallback data from static data
       return productsData.map((item, idx) => ({
         product_id: idx + 1,
-        product_name: `Product ${idx + 1}`,
-        main_image_url: item.img,
+        product_name: item.name,
         price: item.price,
-        discount_price: Math.round(item.price * 0.8),
+        discount_price: item.discountPrice || item.price,
+        description: item.description,
+        main_image_url: item.image,
+        rating: item.rating || 4.5,
+        stock_quantity: item.stock || 15,
+        category_id: item.categoryId || 12,
       }));
     }
-    // Duplicate products to reach minCount
-    const result = [...dbProducts];
-    let i = 0;
-    while (result.length < minCount) {
-      result.push({ ...dbProducts[i % dbProducts.length], product_id: `dup-${result.length}` });
-      i++;
-    }
-    return result;
+    return dbProducts;
   };
 
-  const allProducts = ensureMinProducts(products, 20);
-  const electronicsProducts = ensureMinProducts(
-    products.filter(p => p.category_id === 3 || p.category_id === 1), 
-    20
-  );
+  const allProducts = ensureMinProducts(products);
+
+  // Filter products for different sections
+  const electronicsProducts = allProducts.filter(item => item.category_id === 3);
+  const fashionProducts = allProducts.filter(item => item.category_id === 8);
+  const groceryProducts = allProducts.filter(item => item.category_id === 12);
+  const mobileProducts = allProducts.filter(item => item.category_id === 1);
+  const tvApplianceProducts = allProducts.filter(item => item.category_id === 15);
+  const furnitureProducts = allProducts.filter(item => item.category_id === 10);
+  const toysProducts = allProducts.filter(item => item.category_id === 16);
+
+  // Sample data for sliders
+  const sampleElectronics = electronicsProducts.slice(0, 5);
+  const sampleFashion = fashionProducts.slice(0, 5);
+  const sampleGrocery = groceryProducts.slice(0, 5);
+  const sampleMobile = mobileProducts.slice(0, 5);
+
+  const [searchTerm, setSearchTerm] = React.useState("");
+
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      navigate(`/grocery-store?search=${encodeURIComponent(searchTerm)}`);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="home-page-wrapper">
+        <div className="loading-container">
+          <div className="loader"></div>
+          <span>Finding amazing products for you...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="home-page-wrapper">
@@ -60,8 +93,8 @@ const Home = () => {
           <h1 className="hero-title">Discover Amazing Deals</h1>
           <p className="hero-subtitle">Up to 70% off on top brands. Shop the latest trends in fashion, electronics & more.</p>
           <div className="hero-buttons">
-            <button className="hero-btn primary" onClick={() => navigate('/product-list')}>Shop Now</button>
-            <button className="hero-btn secondary" onClick={() => navigate('/product-list?search=electronics')}>Explore Electronics</button>
+            <Link to="/grocery-store" className="btn-primary">Shop Grocery</Link>
+            <button className="hero-btn secondary" onClick={() => navigate('/grocery-store')}>Explore Electronics</button>
           </div>
         </div>
         <div className="hero-stats">
@@ -80,157 +113,116 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Marquee Promo Strip */}
-      <div className="promo-strip">
-        <div className="promo-marquee">
-          <span>🎉 FREE SHIPPING on orders over ₹500 &nbsp;&nbsp;•&nbsp;&nbsp; 💳 Extra 10% off on UPI Payments &nbsp;&nbsp;•&nbsp;&nbsp; 🎁 Daily Surprise Deals &nbsp;&nbsp;•&nbsp;&nbsp; 🔄 Easy 30-Day Returns</span>
+      {/* Category Bar */}
+      <CategoryBar />
+
+      {/* Best of Electronics */}
+      <div className="grid-container full-width-section">
+        <CardSlider
+          cardSliderTitle="⚡ Best Of Electronics"
+          data={sampleElectronics}
+          isButtonVisible={true}
+          isDraggable={true}
+          buttonText="View All"
+          buttonLink="/electronics"
+        />
+      </div>
+
+      {/* Fashion Trends */}
+      <div className="grid-container full-width-section">
+        <CardSlider
+          cardSliderTitle="🛍️ Fashion Trends"
+          data={sampleFashion}
+          isButtonVisible={true}
+          isDraggable={true}
+          buttonText="View All"
+          buttonLink="/fashion"
+        />
+      </div>
+
+      {/* Grocery Essentials */}
+      <div className="grid-container full-width-section">
+        <CardSlider
+          cardSliderTitle="🛒 Grocery Essentials"
+          data={sampleGrocery}
+          isButtonVisible={true}
+          isDraggable={true}
+          buttonText="View All"
+          buttonLink="/grocery-store"
+        />
+      </div>
+
+      {/* Mobile Phones */}
+      <div className="grid-container full-width-section">
+        <CardSlider
+          cardSliderTitle="📱 Mobile Phones"
+          data={sampleMobile}
+          isButtonVisible={true}
+          isDraggable={true}
+          buttonText="View All"
+          buttonLink="/mobile-phone-store"
+        />
+      </div>
+
+      {/* Wide Banner with Image */}
+      <div className="wide-promo-banner">
+        <img className="wide-promo-bg" src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&h=300&fit=crop" alt="Sale Banner" />
+        <div className="wide-promo-overlay">
+          <h2>🛍️ Mega Sale is Live!</h2>
+          <p>Get exclusive discounts on 1000+ products. Don't miss out!</p>
+          <button className="wide-promo-btn" onClick={() => navigate('/grocery-store')}>View All Deals</button>
         </div>
       </div>
 
-      <div className="home-container">
-        {/* Popular Products */}
-        <div className="grid-container full-width-section">
-          <CardSlider
-            cardSliderTitle="🔥 Popular Products"
-            data={allProducts}
-            isButtonVisible={true}
-            isDraggable={true}
-          />
-        </div>
-
-        {/* Laptops Section */}
-        <div className="grid-container full-width-section">
-          <CardSlider
-            cardSliderTitle="💻 High-Performance Laptops"
-            data={ensureMinProducts(products.filter(p => p.category_id === 2), 20)}
-            isButtonVisible={true}
-            isDraggable={true}
-          />
-        </div>
-
-        {/* Mobile Phones Section */}
-        <div className="grid-container full-width-section">
-          <CardSlider
-            cardSliderTitle="📱 Latest Smartphones"
-            data={ensureMinProducts(products.filter(p => p.category_id === 1), 20)}
-            isButtonVisible={true}
-            isDraggable={true}
-          />
-        </div>
-
-        {/* Fashion Section */}
-        <div className="grid-container full-width-section">
-          <CardSlider
-            cardSliderTitle="👔 Trendy Fashion"
-            data={ensureMinProducts(products.filter(p => p.category_id === 3), 20)}
-            isButtonVisible={true}
-            isDraggable={true}
-          />
-        </div>
-
-        {/* Home & Furniture Section */}
-        <div className="grid-container full-width-section">
-          <CardSlider
-            cardSliderTitle="🏠 Home & Furniture Essentials"
-            data={ensureMinProducts(products.filter(p => p.category_id === 5), 20)}
-            isButtonVisible={true}
-            isDraggable={true}
-          />
-        </div>
-
-        {/* Beauty & Health Section */}
-        <div className="grid-container full-width-section">
-          <CardSlider
-            cardSliderTitle="✨ Beauty & Personal Care"
-            data={ensureMinProducts(products.filter(p => p.category_id === 6), 20)}
-            isButtonVisible={true}
-            isDraggable={true}
-          />
-        </div>
-
-        {/* Wide Banner with Image */}
-        <div className="wide-promo-banner">
-          <img className="wide-promo-bg" src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&h=300&fit=crop" alt="Sale Banner" />
-          <div className="wide-promo-overlay">
-            <h2>🛍️ Mega Sale is Live!</h2>
-            <p>Get exclusive discounts on 1000+ products. Don't miss out!</p>
-            <button className="wide-promo-btn" onClick={() => navigate('/product-list')}>View All Deals</button>
-          </div>
-        </div>
-
-        {/* Best of Electronics */}
-        <div className="grid-container full-width-section">
-          <CardSlider
-            cardSliderTitle="⚡ Best Of Electronics"
-            data={electronicsProducts}
-            isButtonVisible={true}
-            isDraggable={true}
-          />
-        </div>
-
-        <div className="grid-container grid-9">
-          <div className="home-image-banner-container">
-            <a href="#" className="image-bannner">
-              <div className="image-container">
-                <img src={bannerImage.imagebanner} alt="Promo banner" />
-              </div>
-            </a>
-          </div>
-        </div>
-
-        {/* Features */}
-        <div className="grid-container grid-10">
-          <div className="shopping-feature">
-            <div className="feature">
-              <div className="image-con">{icons.shiping}</div>
-              <div className="feature-details">
-                <h1>Free Shipping</h1>
-                <span>From all orders over ₹500</span>
-              </div>
-            </div>
-            <div className="feature">
-              <div className="image-con">{icons.offer}</div>
-              <div className="feature-details">
-                <h1>Daily Surprise Offers</h1>
-                <span>Save up to 25% off</span>
-              </div>
-            </div>
-            <div className="feature">
-              <div className="image-con">{icons.discount}</div>
-              <div className="feature-details">
-                <h1>Affordable Prices</h1>
-                <span>Get Factory direct price</span>
-              </div>
-            </div>
-            <div className="feature">
-              <div className="image-con">{icons.payment}</div>
-              <div className="feature-details">
-                <h1>Secure Payments</h1>
-                <span>100% Protected Payments</span>
-              </div>
-            </div>
-            <div className="feature">
-              <div className="image-con">{icons.headset}</div>
-              <div className="feature-details">
-                <h1>Support 24/7</h1>
-                <span>Shop with an expert</span>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* Best of Fashion */}
+      <div className="grid-container full-width-section">
+        <CardSlider
+          cardSliderTitle="💄 Best of Fashion"
+          data={fashionProducts.slice(0, 10)}
+          isButtonVisible={true}
+          isDraggable={true}
+          buttonText="View All"
+          buttonLink="/fashion"
+        />
       </div>
 
-      {/* Newsletter */}
-      <div className="newsletter-section">
-        <div className="newsletter-content">
-          <h2>Stay in the Loop</h2>
-          <p>Subscribe for exclusive deals, new arrivals, and insider-only discounts.</p>
-          <div className="newsletter-form">
-            <input type="email" placeholder="Enter your email address" className="newsletter-input" />
-            <button className="newsletter-btn">Subscribe</button>
-          </div>
-        </div>
+      {/* Home & Furniture */}
+      <div className="grid-container full-width-section">
+        <CardSlider
+          cardSliderTitle="🏠 Home & Furniture"
+          data={furnitureProducts.slice(0, 10)}
+          isButtonVisible={true}
+          isDraggable={true}
+          buttonText="View All"
+          buttonLink="/home-furniture"
+        />
       </div>
+
+      {/* TVs & Appliances */}
+      <div className="grid-container full-width-section">
+        <CardSlider
+          cardSliderTitle="📺 TVs & Appliances"
+          data={tvApplianceProducts.slice(0, 10)}
+          isButtonVisible={true}
+          isDraggable={true}
+          buttonText="View All"
+          buttonLink="/tv-appliances"
+        />
+      </div>
+
+      {/* Toys & Games */}
+      <div className="grid-container full-width-section">
+        <CardSlider
+          cardSliderTitle="🎮 Toys & Games"
+          data={toysProducts.slice(0, 10)}
+          isButtonVisible={true}
+          isDraggable={true}
+          buttonText="View All"
+          buttonLink="/toys"
+        />
+      </div>
+
+      <HomeBoxContainer />
     </div>
   );
 };

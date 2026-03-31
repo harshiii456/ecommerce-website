@@ -34,8 +34,11 @@ const ProductDetails = () => {
     if (error) return <div className="error-container">{error}</div>;
     if (!currentProduct) return <div className="error-container">Product not found</div>;
 
-    const discountAmount = currentProduct.price - currentProduct.discount_price;
-    const discountPercentage = Math.round((discountAmount / currentProduct.price) * 100);
+    // Convert string prices to numbers for calculations
+    const price = parseFloat(currentProduct.price) || 0;
+    const discountPrice = parseFloat(currentProduct.discount_price) || price;
+    const discountAmount = price - discountPrice;
+    const discountPercentage = price > 0 ? Math.round((discountAmount / price) * 100) : 0;
 
     return (
         <div className="product-details-page">
@@ -61,10 +64,10 @@ const ProductDetails = () => {
                     </div>
 
                     <div className="price-container">
-                        <span className="current-price">₹{currentProduct.discount_price || currentProduct.price}</span>
-                        {currentProduct.discount_price && (
+                        <span className="current-price">₹{discountPrice.toFixed(2)}</span>
+                        {discountPrice < price && (
                             <>
-                                <span className="original-price">₹{currentProduct.price}</span>
+                                <span className="original-price">₹{price.toFixed(2)}</span>
                                 <span className="discount-badge">{discountPercentage}% OFF</span>
                             </>
                         )}

@@ -2,9 +2,9 @@ import { Sequelize, DataTypes } from "sequelize";
 
 // Main database connection (for shared data like products, orders, etc.)
 const sequelize = new Sequelize(
-  process.env.NAME,
+  process.env.NAME || "rshop",
   process.env.USER || 'root',
-  process.env.PASS || '',
+  process.env.PASS || 'Harshita@0456',  // Hardcoded password
   {
     host: process.env.HOST || 'localhost',
     dialect: "mysql",

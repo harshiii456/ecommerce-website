@@ -66,42 +66,32 @@ export const CategoriesBarItem = [
   {
     title: "Grocery",
     img: categoryBarImagepath.grocery,
-    path: "/Grocery-store",
+    path: "/grocery-store",
   },
   {
     title: "Mobile",
     img: categoryBarImagepath.mobile,
-    path: "/Mobile-phone-store",
+    path: "/mobile-phone-store",
   },
   {
     title: "Fashion",
     img: categoryBarImagepath.fashion,
-    path: "/product-list",
+    path: "/fashion",
   },
   {
     title: "Electronics",
     img: categoryBarImagepath.electronics,
-    path: "",
+    path: "/electronics",
   },
   {
     title: "Furniture",
     img: categoryBarImagepath.furniture,
-    path: "",
-  },
-  {
-    title: "Tvs & Appliences",
-    img: categoryBarImagepath.appliences,
-    path: "",
-  },
-  {
-    title: "Travel",
-    img: categoryBarImagepath.aroplane,
-    path: "",
+    path: "/home-furniture",
   },
   {
     title: "Toys",
     img: categoryBarImagepath.toys,
-    path: "",
+    path: "/toys",
   },
 ];
 
@@ -109,7 +99,7 @@ export const CategoriesNavItem = [
   {
     title: "Grocery",
     img: categoryBarImagepath.grocery,
-    path: "/product-list?category_id=1",
+    path: "/grocery-store",
   },
   {
     title: "Mobile",
@@ -119,32 +109,27 @@ export const CategoriesNavItem = [
   {
     title: "Electronics",
     img: categoryBarImagepath.electronics,
-    path: "/product-list?category_id=4",
+    path: "/product-list?category_id=3",
   },
   {
     title: "TVs & Appliances",
     img: categoryBarImagepath.appliences,
-    path: "/product-list?category_id=4",
+    path: "/product-list?category_id=15",
   },
   {
     title: "Fashion",
     img: categoryBarImagepath.fashion,
-    path: "/product-list?category_id=3",
+    path: "/product-list?category_id=8",
   },
   {
     title: "Home & Furniture",
     img: categoryBarImagepath.furniture,
-    path: "/product-list?category_id=5",
+    path: "/product-list?category_id=10",
   },
   {
     title: "Toys",
     img: categoryBarImagepath.toys,
-    path: "/product-list?category_id=5",
-  },
-  {
-    title: "Travel",
-    img: categoryBarImagepath.aroplane,
-    path: "/booking",
+    path: "/toys",
   },
 ];
 

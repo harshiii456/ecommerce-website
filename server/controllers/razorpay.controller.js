@@ -9,10 +9,12 @@ import crypto from 'crypto';
 
 const { CartItem } = models;
 
+/* Temporarily commented out for testing
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
+*/
 
 const createRazorpayOrder = asyncHandler(async (req, res, next) => {
   const { amount, currency = 'INR', receipt } = req.body;

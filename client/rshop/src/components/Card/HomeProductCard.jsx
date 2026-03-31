@@ -7,6 +7,11 @@ import { icons } from "../../common/Path";
 
 const HomeProductCard = ({ item }) => {
   const dispatch = useDispatch();
+  
+  // Convert string prices to numbers for proper display
+  const price = parseFloat(item.price) || 0;
+  const discountPrice = parseFloat(item.discount_price) || price;
+  
   return (
     <div className="home-product-card">
       <Link to={`/product/${item.product_id}`} className="card" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -15,7 +20,7 @@ const HomeProductCard = ({ item }) => {
         </div>
         <div className="home-product-info">
           <span className="product-name">{item.product_name}</span>
-          <span className="product-price">₹{item.discount_price || item.price}</span>
+          <span className="product-price">₹{discountPrice.toFixed(2)}</span>
           <button 
             className="home-add-to-cart-btn"
             onClick={(e) => {

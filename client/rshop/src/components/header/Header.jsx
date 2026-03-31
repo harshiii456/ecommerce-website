@@ -57,7 +57,7 @@ const Header = () => {
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      navigate(`/product-list?search=${encodeURIComponent(searchTerm)}`);
+      navigate(`/grocery-store?search=${encodeURIComponent(searchTerm)}`);
     }
   };
 

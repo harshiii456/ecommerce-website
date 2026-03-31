@@ -246,7 +246,7 @@ const Checkout = () => {
         return (
             <div className="checkout-empty">
                 <h1>Your cart is empty</h1>
-                <button onClick={() => navigate('/product-list')}>Continue Shopping</button>
+                <button onClick={() => navigate('/grocery-store')}>Continue Shopping</button>
             </div>
         );
     }
