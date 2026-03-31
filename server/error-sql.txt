@@ -1,1 +1,0 @@
-INSERT INTO `otp_verification` (`otp_id`,`email_id`,`otp`,`expires_at`,`is_verified`,`created_at`) VALUES (DEFAULT,?,?,?,?,?);

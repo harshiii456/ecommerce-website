@@ -1,4 +1,0 @@
-Error: Error finding OTP
-    at findOTP (file:///C:/Users/Dell/Downloads/React-Ecommerce-Project-main/React-Ecommerce-Project-main/server/modals/user.modal.sequelize.js:143:11)
-    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-    at async test (file:///C:/Users/Dell/Downloads/React-Ecommerce-Project-main/React-Ecommerce-Project-main/server/test-find-otp.js:15:19)

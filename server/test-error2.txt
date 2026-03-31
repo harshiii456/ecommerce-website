@@ -1,1 +1,0 @@
-Unknown column 'user_id' in 'field list'
