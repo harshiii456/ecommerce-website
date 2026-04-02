@@ -28,8 +28,12 @@ import reviewRouter from "./routes/review.routes.js";
 import categoryRouter from "./routes/category.routes.js";
 import razorpayRouter from "./routes/razorpay.routes.js";
 import testRouter from "./test-endpoint.js";
+import debugRouter from "./debug-endpoint.js";
+import authTestRouter from "./auth-test-endpoint.js";
 
 app.use("/api/v1/test", testRouter);
+app.use("/api/v1/debug", debugRouter);
+app.use("/api/v1/auth-test", authTestRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/interaction", interactionRouter);

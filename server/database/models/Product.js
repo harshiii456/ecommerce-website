@@ -57,8 +57,6 @@ export const Product = (sequelize, DataTypes) => {
     // Product has many CartItems
     Product.hasMany(models.CartItem, { foreignKey: 'product_id', as: 'cartItems' });
     
-    Product.hasMany(models.Wishlist, { foreignKey: 'product_id', as: 'wishlistEntries' });
-    
     // Product has many Reviews
     Product.hasMany(models.Review, { foreignKey: 'product_id', as: 'reviews' });
   };

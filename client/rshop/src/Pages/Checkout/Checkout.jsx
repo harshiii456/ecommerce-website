@@ -67,7 +67,7 @@ const Checkout = () => {
 
     const createRazorpayOrder = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/v1/payment/create-order', {
+            const response = await fetch('http://localhost:8002/api/v1/payment/create-order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -110,7 +110,7 @@ const Checkout = () => {
                     // Verify payment on backend
                     try {
                         console.log("Sending payment verification...");
-                        const verifyResponse = await fetch('http://localhost:8000/api/v1/payment/verify-payment', {
+                        const verifyResponse = await fetch('http://localhost:8002/api/v1/payment/verify-payment', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -183,7 +183,7 @@ const Checkout = () => {
 
         setIsProcessing(true);
         try {
-            const response = await fetch('http://localhost:8000/api/v1/order/place-order', {
+            const response = await fetch('http://localhost:8002/api/v1/order/place-order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
